@@ -1,6 +1,7 @@
 const http = require('http')
 const express = require('express')
 const { generateKey } = require('crypto')
+const path = require('path')
 
 let notes = [
     {
@@ -28,8 +29,15 @@ let notes = [
 app = express()
 app.use(express.json())
 
+
+// Serve static files from the 'src' directory
+app.use(express.static(path.join(__dirname)));
+
+
 app.get('/',(req,res)=>{
-    res.send("<h1>Html hello2</h1><a href='/api/notes'>Notes</a> <a href='/api/notes/6'>Notes3</a>")
+  res.sendFile(path.join(__dirname, 'html_file.html'));
+  //res.sendFile('C:/Users/mina/Desktop/HKIFullstackOpen/osa3/src/html_file.html');  
+  //res.send("<h1>Html hello2</h1><a href='/api/notes'>Notes</a> <a href='/api/notes/6'>Notes3</a>")
 })
 
 app.get('/api/notes',(req,res)=>
