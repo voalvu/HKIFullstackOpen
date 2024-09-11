@@ -42,7 +42,7 @@ let notes = [
   }) */
 
 app = express()
-app.use(morgan('default','tiny'))
+app.use(morgan('tiny'))//':method :url :status :res[content-length] - :response-time ms'))
 app.use(express.json())
 
 
