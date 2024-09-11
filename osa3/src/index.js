@@ -42,9 +42,18 @@ let notes = [
   }) */
 
 app = express()
-app.use(morgan('tiny'))//':method :url :status :res[content-length] - :response-time ms'))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))//':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(express.json())
 
+morgan.token('body', function getId (req) {
+  body = req.body  
+  const person = {
+      name:body.name,
+      number:body.number,
+      id: generatePhoneId(),
+  }
+  return JSON.stringify(person)
+})
 
 
 // Serve static files from the 'src' directory
@@ -136,7 +145,7 @@ app.get('/api/persons/:id', (req, res) => {
 
   const generatePhoneId = () => {
     const id = Math.floor(Math.random()*1000000)
-    console.log(id)
+    //console.log(id)
     return String(id)
   }
 
