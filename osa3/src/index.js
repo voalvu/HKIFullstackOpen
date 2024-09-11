@@ -3,6 +3,21 @@ const express = require('express')
 const { generateKey } = require('crypto')
 const path = require('path')
 
+//3.7
+const morgan = require('morgan')
+
+/* morgan("default",':method :url :status :res[content-length] - :response-time ms')
+ */
+/* morgan(function (tokens, req, res) {
+  return [
+    tokens.method(req, res),
+    tokens.url(req, res),
+    tokens.status(req, res),
+    tokens.res(req, res, 'content-length'), '-',
+    tokens['response-time'](req, res), 'ms'
+  ].join(' ')
+}) */
+
 let notes = [
     {
       id: "1",
@@ -27,7 +42,9 @@ let notes = [
   }) */
 
 app = express()
+app.use(morgan('default','tiny'))
 app.use(express.json())
+
 
 
 // Serve static files from the 'src' directory
