@@ -23,23 +23,29 @@ const Statistics =(props)=>{
   let avg = 0
   let positive = 0
 
-return (<>
-  <h1>Statistics</h1>
-  <div class="statistics">
-    <p>{Object.keys(props.options)[0]+": "}{props.options["good"].value}</p>
-    <p>{Object.keys(props.options)[1]+": "}{props.options["neutral"].value}</p>
-    <p>{Object.keys(props.options)[2]+": "}{props.options["semi"].value}</p>
-    <p>{Object.keys(props.options)[3]+": "}{props.options["bad"].value}</p>
+  // Checking if sum of feedback button pressed is total 0, using a combination of Object.map and Array.reduce().
+  if(Object.values(props.options).map(val=>val.value).reduce((a,b) => {return a + b},0) == 0){
+    return (<><h1>Statistics</h1>
+    <p> No feedback yet </p></>)
+  }else{
+    return (<>
+      <h1>Statistics</h1>
+      <div className="statistics">
 
-    {Object.keys(props.options).forEach(key => sum+=props.options[key].value)}
-    
-    <p>All: {sum}</p>
-    <p>Avg: {sum/Object.keys(props.options).length}</p>
-    <p>Positive: {props.options["good"].value/sum} %</p>
-    </div>
-</>)
+        <p>{Object.keys(props.options)[0]+": "}{props.options["good"].value}</p>
+        <p>{Object.keys(props.options)[1]+": "}{props.options["neutral"].value}</p>
+        <p>{Object.keys(props.options)[2]+": "}{props.options["semi"].value}</p>
+        <p>{Object.keys(props.options)[3]+": "}{props.options["bad"].value}</p>
+
+        {Object.keys(props.options).forEach(key => sum+=props.options[key].value)}
+
+        <p>All: {sum}</p>
+        <p>Avg: {sum/Object.keys(props.options).length}</p>
+        <p>Positive: {props.options["good"].value/sum} %</p>
+        </div>
+    </>)
+  }
 }
-
 /* const Klikkaukset = (props)=>{
   let j = 1
   for(let el of props.klikkaukset){
