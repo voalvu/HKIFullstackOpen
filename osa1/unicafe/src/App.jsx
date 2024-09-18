@@ -10,23 +10,21 @@ const Button = (props) =>{
 }
 
 const Buttons = (props)=> {
-  return (<div class="buttons">
-    <Button name="hyvää" onClick={props.options["good"].onClick} value={props.options["good"].value} ></Button>
-    <Button name="ok" onClick={props.options["neutral"].onClick} value={props.options["neutral"].value}></Button>
-    <Button name="eh..." onClick={props.options["semi"].onClick} value={props.options["semi"].value}></Button>
-    <Button name="pahaa >:(" onClick={props.options["bad"].onClick} value={props.options["bad"].value}></Button>
+  return (    <div className="buttons">
+    {Object.keys(props.options).map(key => (
+      <Button key={key} name={key} onClick={props.options[key].onClick} value={props.options[key].value} />
+    ))}
   </div>)
 }
 
 const Statistics =(props)=>{
 return (<>
   <h1>Statistics</h1>
-  <div class="statistics">
-    <p>{Object.keys(props.options)[0]+": "}{props.options["good"].value}</p>
-    <p>{Object.keys(props.options)[1]+": "}{props.options["neutral"].value}</p>
-    <p>{Object.keys(props.options)[2]+": "}{props.options["semi"].value}</p>
-    <p>{Object.keys(props.options)[3]+": "}{props.options["bad"].value}</p>
-    </div>
+  <div className="statistics">
+        {Object.keys(props.options).map(key => (
+          <p key={key}>{key}: {props.options[key].value}</p>
+        ))}
+      </div>
 </>)
 }
 
@@ -42,17 +40,23 @@ const App = () => {
 
   // Learned that the state shouldn't be used inside smaller components in an App like this.
   // First I tried setting these inside the buttons but ran into trouble getting the value into the statistics component to render it. 
-  const [good, setGood] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [semi, setSemi] = useState(0)
-  const [bad, setBad] = useState(0)
+  const [feedback, setFeedback] = useState({
+    good: 0,
+    neutral: 0,
+    semi: 0,
+    bad: 0,
+  });
 
-  const options = { 
-    "good":{"value":good,"onClick":setGood},
-    "neutral":{"value":neutral,"onClick":setNeutral},
-    "semi":{"value":semi,"onClick":setSemi},
-    "bad":{"value":bad,"onClick":setBad}
-  }
+  const handleFeedback = (type) => {
+    setFeedback(prev => ({ ...prev, [type]: prev[type] + 1 }));
+  };
+
+  const options = {
+    good: { value: feedback.good, onClick: () => handleFeedback('good') },
+    neutral: { value: feedback.neutral, onClick: () => handleFeedback('neutral') },
+    semi: { value: feedback.semi, onClick: () => handleFeedback('semi') },
+    bad: { value: feedback.bad, onClick: () => handleFeedback('bad') },
+  };
 
   return (
     <div>
