@@ -10,12 +10,18 @@ const Button = (props) =>{
 }
 
 const Buttons = (props)=> {
-  return (<div class="buttons">
+  return (<div className="buttons">
     <Button name="hyvää" onClick={props.options["good"].onClick} value={props.options["good"].value} ></Button>
     <Button name="ok" onClick={props.options["neutral"].onClick} value={props.options["neutral"].value}></Button>
     <Button name="eh..." onClick={props.options["semi"].onClick} value={props.options["semi"].value}></Button>
     <Button name="pahaa >:(" onClick={props.options["bad"].onClick} value={props.options["bad"].value}></Button>
   </div>)
+}
+
+const StatisticLine = (props) =>{
+  return(
+    <><td>{props.text+": "}</td><td>{props.value}</td></>
+  )
 }
 
 const Statistics =(props)=>{
@@ -31,18 +37,27 @@ const Statistics =(props)=>{
     return (<>
       <h1>Statistics</h1>
       <div className="statistics">
+        <table>
+            <tr>
 
-        <p>{Object.keys(props.options)[0]+": "}{props.options["good"].value}</p>
-        <p>{Object.keys(props.options)[1]+": "}{props.options["neutral"].value}</p>
-        <p>{Object.keys(props.options)[2]+": "}{props.options["semi"].value}</p>
-        <p>{Object.keys(props.options)[3]+": "}{props.options["bad"].value}</p>
+        <StatisticLine text="good" value={props.options.good.value} />
+        </tr><tr>
+        <StatisticLine text="neutral" value ={props.options.semi.value} />
+        </tr><tr>
+        <StatisticLine text="semi" value={props.options.semi.value} />
+        </tr><tr>
+        <StatisticLine text="bad" value ={props.options.bad.value} />
+        </tr><tr>
 
         {Object.keys(props.options).forEach(key => sum+=props.options[key].value)}
 
-        <p>All: {sum}</p>
-        <p>Avg: {sum/Object.keys(props.options).length}</p>
-        <p>Positive: {props.options["good"].value/sum} %</p>
+        <StatisticLine text="All" value ={sum} />
+        </tr><tr>
+        <StatisticLine text="Avg" value ={sum/Object.keys(props.options).length} /></tr><tr>
+        <StatisticLine text="Positive" value ={props.options["good"].value/sum + "%"} /></tr>
+        </table>
         </div>
+        
     </>)
   }
 }
