@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import personService from './services/persons'
 
 const Filter = ({setFil}) => {
     const handleFilterInput = (e) => {
@@ -9,22 +10,41 @@ const Filter = ({setFil}) => {
     return(<p>filter shown with <input onInput={handleFilterInput}/></p>)
 }
 
-const Persons = ({persons,filter}) =>{
+const Persons = ({persons,filter,setPersons}) =>{
     const personsToShow = persons.filter(per => per.name.toLowerCase().includes(filter.toLowerCase()))
     console.log(personsToShow)
 
+    const handlePersonRemoval = (e, per) => {
+      console.log(e);
+      if (window.confirm(`delete ${per.name}`)) {
+        console.log(`deleting ${per.name} with id ${per.id}`)
+        personService.getById(per.id)
+        .then((res)=>console.log(res))
+        personService
+          .deletePerson(per.id)
+          .then((response) => {
+            console.log("person removed", response);
+            setPersons(persons.filter((p) => p.id !== per.id));
+          })
+          .catch((error) => {
+            console.error("Error deleting person:", error);
+            console.log("Server response:", error.response);
+            alert(`Error deleting ${per.name}: ${error.message}`);
+          });
+        console.log("removing complete");
+      }
+    };
+    
     return(<><h2>Numbers</h2>
-    {personsToShow.map((per,idx) => <p key={`${per.name.split(' ')[0]}-${idx}}`}>{per.name} {per.number}</p>)}
+    {personsToShow.map((per,idx) => <><p key={`${per.name.split(' ')[0]}-${idx}}`}>{per.name} {per.number}<button onClick={(e) => handlePersonRemoval(e,per)}>delete</button></p></>)}
     </>
     )
 }
 
 const AddPersonForm = ({persons, setPersons}) =>{
 
-    const handleClick = (e) =>{
+    const handleAddingPerson = (e) =>{
         e.preventDefault()
-        console.log(e.target)
-        console.log(persons.map(per => per.name).includes(e.target[0].value))
         let inputName = e.target[0].value
         let inputNum = e.target[1].value
         
@@ -33,11 +53,20 @@ const AddPersonForm = ({persons, setPersons}) =>{
             return
         }
         let newPersons = [...persons]
-        setPersons(newPersons.concat([{name:inputName, number:inputNum}]))
+
+        const getId = () => {return Math.floor(Math.random() * 100000).toString()}
+        personService
+          .create({name:inputName, number:inputNum, id:getId()})
+        //axios.post('http://localhost:3001/persons', {name:inputName, number:inputNum})
+          .then(res => {//console.log(res)
+          setPersons(newPersons.concat([res.data]))}
+        )
+        
+        
         //console.log(e.target[0].value)
     }
 
-    return (<form onSubmit={handleClick}>
+    return (<form onSubmit={handleAddingPerson}>
         <div>
           name: <input />
         </div>
@@ -49,33 +78,32 @@ const AddPersonForm = ({persons, setPersons}) =>{
 }
 
 const App = () => {
-    const [notes, setNotes] = useState([])
-    const [persons, setPersons] = useState([])
+  //const [notes, setNotes] = useState([])
+  const [persons, setPersons] = useState([])
   const [fil, setFil] = useState('')
 
-  
+  // This code displays persons by calling setPerson with data from personService getAll route(?) 
   useEffect(() => {
-    console.log('notes effect')    
-    axios      
-      .get('http://localhost:3001/notes')      
+    console.log('persons getAll effect')
+    personService.getAll()    
       .then(response => {        
-        console.log('promise fulfilled')        
-        setNotes(response.data)      
-      })  
-    }, [])  
-    console.log('render', notes.length, 'notes')
+        console.log('persons getAll promise fulfilled')        
+        setPersons(response.data)      
+      })}
+, [])
+      console.log('render',persons.length,'persons')
 
-    useEffect(() => {
-      console.log('persons effect')    
-      axios      
-        .get('http://localhost:3001/persons')      
-        .then(response => {        
-          console.log('promise fulfilled')        
-          setPersons(response.data)      
-        })  
-      }, [])  
-      console.log('render', persons.length, 'persons')
+      console.log(
+      personService
+        .getById(78))
 
+/* personService.deletePerson()    
+.then(response => {        
+  console.log('persons deletePerson promise fulfilled')        
+  setPersons(response.data)      
+})  
+
+} */
   return (
     <>
     <div>
@@ -83,7 +111,7 @@ const App = () => {
       <Filter setFil={setFil}/>
       <h2>Add new person to phonebook</h2>
       <AddPersonForm persons={persons} setPersons={setPersons}/>
-      <Persons persons={persons} filter={fil}/>
+      <Persons persons={persons} filter={fil} setPersons={setPersons}/>
 
       {/* {persons.filter(per => per.name.toLowerCase().includes(fil.toLowerCase())).map(per => <p>{per.name} {per.number}</p>)}/* .filter(entry => entry.innerText.toLowerCase()===fil)} */}    
       </div>
