@@ -11,6 +11,7 @@ const Filter = ({setFil}) => {
 }
 
 const Persons = ({persons,filter,setPersons}) =>{
+  console.log(typeof(persons),persons)
     const personsToShow = persons.filter(per => per.name.toLowerCase().includes(filter.toLowerCase()))
     console.log(personsToShow)
 
@@ -34,6 +35,7 @@ const Persons = ({persons,filter,setPersons}) =>{
         console.log("removing complete");
       }
     };
+
     
     return(<><h2>Numbers</h2>
     {personsToShow.map((per,idx) => <><p key={`${per.name.split(' ')[0]}-${idx}}`}>{per.name} {per.number}<button onClick={(e) => handlePersonRemoval(e,per)}>delete</button></p></>)}
@@ -43,13 +45,47 @@ const Persons = ({persons,filter,setPersons}) =>{
 
 const AddPersonForm = ({persons, setPersons}) =>{
 
+  const handleNumberUpdate = (per, num) => {
+    console.log(per,per.id,num);
+    if (window.confirm(`${per.name} already in phonebook, replace old number with new one?`)) {
+      console.log(`updating ${per.name} (id ${per.id}) number with new num`)
+      
+      let updatedPerson = { ...per };
+      updatedPerson.number = num;
+
+      personService
+        .update(per.id, updatedPerson)
+        .then((response) => {
+          console.log("number updated", response);
+          let newPersons = [...persons]
+          let idxToUpdate = newPersons.findIndex(p => p.id == per.id)
+          newPersons[idxToUpdate] = response.data
+          setPersons(newPersons);
+        })
+        .catch((error) => {
+          console.error("Error updating number:", error);
+          console.log("Server response:", error.response);
+          alert(`Error updating number for ${per.name}: ${error.message}`);
+        });
+      console.log("number update complete");
+    }
+  };
+
     const handleAddingPerson = (e) =>{
         e.preventDefault()
         let inputName = e.target[0].value
         let inputNum = e.target[1].value
         
-        if(persons.map(per => per.name.replaceAll(" ",'')).includes(inputName.replaceAll(" ",''))){
+        const nameAlreadyExists = 
+          persons.map(per => per.name.replaceAll(" ",'')).includes(inputName.replaceAll(' ',""))
+        
+        const found = Array.from(persons).find(per => per.name.replaceAll(" ",'').includes(inputName.replaceAll(' ',"")))
+        if(nameAlreadyExists){
+            if(found.number !== inputNum){
+              handleNumberUpdate(found,inputNum)}
+              else{
             alert(inputName + "already added in phonebook")
+              }
             return
         }
         let newPersons = [...persons]
@@ -92,10 +128,6 @@ const App = () => {
       })}
 , [])
       console.log('render',persons.length,'persons')
-
-      console.log(
-      personService
-        .getById(78))
 
 /* personService.deletePerson()    
 .then(response => {        

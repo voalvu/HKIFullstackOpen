@@ -28,6 +28,7 @@ const deletePerson = personId => {
     return axios.delete(url)
   };
 
+
 /* const deletePerson = id =>{
     return axios.delete(`${baseUrl}`).then(response => {
         console.log(response.data);
