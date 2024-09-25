@@ -1,0 +1,25 @@
+h2 {
+    color: blue;
+  }
+
+.error{
+    font-size:large;
+    font-family:'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: rgb(240, 16, 16);
+    border-color: rgb(128, 0, 0);
+    border: solid;
+    border-radius: 10px;
+    padding: 10px; 
+}
+
+.success{
+    font-size:large;
+    font-family:'Courier New', Courier, monospace;
+    font-weight: bold;
+    color: rgb(57, 161, 57);
+    border-color: green;
+    border: solid;
+    border-radius: 10px;
+    padding: 10px; 
+}

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import axios from 'axios'
 import personService from './services/persons'
 
+
 const Filter = ({setFil}) => {
     const handleFilterInput = (e) => {
         console.log(e.target.value)
@@ -43,7 +44,7 @@ const Persons = ({persons,filter,setPersons}) =>{
     )
 }
 
-const AddPersonForm = ({persons, setPersons}) =>{
+const AddPersonForm = ({persons, setPersons, setSuccessMessage, setErrorMessage}) =>{
 
   const handleNumberUpdate = (per, num) => {
     console.log(per,per.id,num);
@@ -61,11 +62,15 @@ const AddPersonForm = ({persons, setPersons}) =>{
           let idxToUpdate = newPersons.findIndex(p => p.id == per.id)
           newPersons[idxToUpdate] = response.data
           setPersons(newPersons);
+          setSuccessMessage(`Person '${updatedPerson.name}' updated succesfully`)
+          setTimeout(() => {setErrorMessage(null)}, 5000)
         })
         .catch((error) => {
+          console.log("DOING THIS NOW NOW NOW")
           console.error("Error updating number:", error);
           console.log("Server response:", error.response);
-          alert(`Error updating number for ${per.name}: ${error.message}`);
+          setErrorMessage(`Person '${updatedPerson.name}' was already removed from server`)
+          setTimeout(() => {setErrorMessage(null)}, 5000)
         });
       console.log("number update complete");
     }
@@ -95,7 +100,16 @@ const AddPersonForm = ({persons, setPersons}) =>{
           .create({name:inputName, number:inputNum, id:getId()})
         //axios.post('http://localhost:3001/persons', {name:inputName, number:inputNum})
           .then(res => {//console.log(res)
-          setPersons(newPersons.concat([res.data]))}
+          setPersons(newPersons.concat([res.data]))
+            
+          // Make succesfull add visual notification
+          setSuccessMessage(`Added ${res.data.name}`)
+          setTimeout(function () {
+            setSuccessMessage(null)
+        }, 3000);}
+          
+          
+          
         )
         
         
@@ -113,10 +127,29 @@ const AddPersonForm = ({persons, setPersons}) =>{
       </form>)
 }
 
+const Notification = ({ errorMessage, successMessage }) => {
+  if (errorMessage === null && successMessage=== null) {
+    return null
+  }
+  if(errorMessage !== null)
+  return (
+    <div className="error">
+      {errorMessage}
+    </div>
+  )
+  return (
+    <div className="success">
+      {successMessage}
+    </div>
+  )
+}
+
 const App = () => {
   //const [notes, setNotes] = useState([])
   const [persons, setPersons] = useState([])
   const [fil, setFil] = useState('')
+  const [errorMessage, setErrorMessage] = useState(null)
+  const [successMessage, setSuccessMessage] = useState(null)
 
   // This code displays persons by calling setPerson with data from personService getAll route(?) 
   useEffect(() => {
@@ -140,9 +173,10 @@ const App = () => {
     <>
     <div>
       <h2>Phonebook</h2>
+      <Notification successMessage={successMessage} errorMessage={errorMessage}/>
       <Filter setFil={setFil}/>
       <h2>Add new person to phonebook</h2>
-      <AddPersonForm persons={persons} setPersons={setPersons}/>
+      <AddPersonForm persons={persons} setPersons={setPersons} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage}/>
       <Persons persons={persons} filter={fil} setPersons={setPersons}/>
 
       {/* {persons.filter(per => per.name.toLowerCase().includes(fil.toLowerCase())).map(per => <p>{per.name} {per.number}</p>)}/* .filter(entry => entry.innerText.toLowerCase()===fil)} */}    
