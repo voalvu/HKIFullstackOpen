@@ -50,7 +50,7 @@ morgan.token('body', function getId (req) {
   const person = {
       name:body.name,
       number:body.number,
-      id: generatePhoneId(),
+      //id: generatePhoneId(),
   }
   return JSON.stringify(person)
 })
@@ -61,7 +61,7 @@ app.use(express.static(path.join(__dirname)));
 
 
 app.get('/',(req,res)=>{
-  res.sendFile(path.join(__dirname, 'html_file.html'));
+  //res.sendFile(path.join(__dirname, 'html_file.html'));
   //res.sendFile('C:/Users/mina/Desktop/HKIFullstackOpen/osa3/src/html_file.html');  
   //res.send("<h1>Html hello2</h1><a href='/api/notes'>Notes</a> <a href='/api/notes/6'>Notes3</a>")
 })
@@ -117,7 +117,7 @@ let persons = [{id:"1",name:"first last",number:"123-123123"},
 app.get('/api/persons',(req,res)=>
     res.json(persons))
 
-app.get('/api/info',(req,res)=>{
+app.get('/info',(req,res)=>{
     if(persons.length != 1)
         res.send(`<p>Phonebook has info for ${persons.length} people</p><p>${new Date().toString()}</p>`)
     else{
@@ -139,7 +139,7 @@ app.get('/api/persons/:id', (req, res) => {
   app.delete('/api/persons/:id', (req, res) => {
     const id = req.params.id
     persons = persons.filter(person => person.id !== id)
-  
+    
     res.status(204).end()
   })
 
