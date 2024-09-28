@@ -28,24 +28,9 @@
       "id": "2"
     },
     {
-      "name": "Dan Abramov",
-      "number": "12-43-234345",
-      "id": "3"
-    },
-    {
       "name": "Mary Poppendieck",
       "number": "39-23-6423122",
       "id": "4"
-    },
-    {
-      "id": "17880",
-      "name": "Arto Hellas Jr.",
-      "number": "040-12345101"
-    },
-    {
-      "id": "65795",
-      "name": "Arto Hellas Jr.2",
-      "number": "040-12345100"
     },
     {
       "id": "24642",
@@ -53,39 +38,9 @@
       "number": "123-123-123"
     },
     {
-      "id": "92887",
-      "name": "Jonathan Bisnens 2",
-      "number": "2-1304920"
-    },
-    {
-      "id": "70774",
-      "name": "Jonathan Bisnens 3",
-      "number": "2-1304920"
-    },
-    {
-      "id": "1053",
-      "name": "Jonathan Bisnens 4",
-      "number": "q32413411"
-    },
-    {
       "id": "92159",
       "name": "Dan Abramov 2",
       "number": " 324234-3424"
-    },
-    {
-      "id": "80447",
-      "name": "Dan Abramov 4",
-      "number": " 324234-3424"
-    },
-    {
-      "id": "39534",
-      "name": "adfadfa",
-      "number": "3242"
-    },
-    {
-      "id": "20114",
-      "name": "adfadfa4",
-      "number": "3242"
     }
   ]
 }

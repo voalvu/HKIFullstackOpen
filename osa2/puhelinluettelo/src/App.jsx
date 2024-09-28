@@ -11,7 +11,7 @@ const Filter = ({setFil}) => {
     return(<p>filter shown with <input onInput={handleFilterInput}/></p>)
 }
 
-const Persons = ({persons,filter,setPersons}) =>{
+const Persons = ({persons,filter,setPersons,setErrorMessage,setSuccessMessage}) =>{
   console.log(typeof(persons),persons)
     const personsToShow = persons.filter(per => per.name.toLowerCase().includes(filter.toLowerCase()))
     console.log(personsToShow)
@@ -27,11 +27,13 @@ const Persons = ({persons,filter,setPersons}) =>{
           .then((response) => {
             console.log("person removed", response);
             setPersons(persons.filter((p) => p.id !== per.id));
+            setSuccessMessage(`Person ${response.data.name} deleted`)
+            setTimeout(() => {setSuccessMessage(null)}, 5000)
           })
           .catch((error) => {
-            console.error("Error deleting person:", error);
+            setErrorMessage(`Error deleting person ${per.name}. ${error.response.data}`)
+            setTimeout(() => {setErrorMessage(null)}, 5000)
             console.log("Server response:", error.response);
-            alert(`Error deleting ${per.name}: ${error.message}`);
           });
         console.log("removing complete");
       }
@@ -63,10 +65,9 @@ const AddPersonForm = ({persons, setPersons, setSuccessMessage, setErrorMessage}
           newPersons[idxToUpdate] = response.data
           setPersons(newPersons);
           setSuccessMessage(`Person '${updatedPerson.name}' updated succesfully`)
-          setTimeout(() => {setErrorMessage(null)}, 5000)
+          setTimeout(() => {setSuccessMessage(null)}, 5000)
         })
         .catch((error) => {
-          console.log("DOING THIS NOW NOW NOW")
           console.error("Error updating number:", error);
           console.log("Server response:", error.response);
           setErrorMessage(`Person '${updatedPerson.name}' was already removed from server`)
@@ -162,13 +163,7 @@ const App = () => {
 , [])
       console.log('render',persons.length,'persons')
 
-/* personService.deletePerson()    
-.then(response => {        
-  console.log('persons deletePerson promise fulfilled')        
-  setPersons(response.data)      
-})  
 
-} */
   return (
     <>
     <div>
@@ -177,7 +172,7 @@ const App = () => {
       <Filter setFil={setFil}/>
       <h2>Add new person to phonebook</h2>
       <AddPersonForm persons={persons} setPersons={setPersons} setSuccessMessage={setSuccessMessage} setErrorMessage={setErrorMessage}/>
-      <Persons persons={persons} filter={fil} setPersons={setPersons}/>
+      <Persons persons={persons} filter={fil} setPersons={setPersons} setErrorMessage={setErrorMessage} setSuccessMessage={setSuccessMessage}/>
 
       {/* {persons.filter(per => per.name.toLowerCase().includes(fil.toLowerCase())).map(per => <p>{per.name} {per.number}</p>)}/* .filter(entry => entry.innerText.toLowerCase()===fil)} */}    
       </div>
