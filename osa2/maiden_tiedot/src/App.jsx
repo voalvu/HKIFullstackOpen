@@ -58,8 +58,8 @@ const CountryInfo = ({country}) =>{
 const App = () => {
 
 const [countries,setCountries] = useState([])
-const [inputText,setInput] = useState("Finland")
-const [foundCountries,setFoundCountries] = useState([])
+const [inputText,setInput] = useState(null)
+const [foundCountries,setFoundCountries] = useState(["Finland"])
 const [singleCountry, setSingleCountry] = useState(null)
 
 
@@ -68,6 +68,13 @@ const handleInput =(e) =>
   setInput(e.target.value)
 }
 
+const showCountry = (e)=>{
+  console.log(e.target.previousSibling.data)
+  let country_name = e.target.previousSibling.data
+  axios.get(`https://studies.cs.helsinki.fi/restcountries/api/name/${country_name}`)
+          .then((res)=>setSingleCountry(res.data))
+          
+  }
 // get all countries on first page load
 
 // ALSO
@@ -105,7 +112,8 @@ useEffect(() => {
     <div>
       find countries <input type="text" onInput={handleInput}></input>
       <div></div>
-      <p>Found:</p> {foundCountries.map(c => <p>{c}</p>)}
+      
+      <p>Found:</p> { foundCountries.length>0 ? foundCountries.map(c => <>{c}<button onClick={showCountry}>show</button><br></br></>) : {foundCountries}}
       <CountryInfo country={singleCountry} weather_descriptions={weather_descriptions}></CountryInfo>
     </div>
     </>
