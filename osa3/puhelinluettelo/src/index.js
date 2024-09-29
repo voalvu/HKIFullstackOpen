@@ -1,10 +1,17 @@
-const http = require('http')
-const express = require('express')
-const { generateKey } = require('crypto')
-const path = require('path')
+import http from 'http';
+import express from 'express';
+import { generateKey } from 'crypto';
+import path from 'path';
+import cors from 'cors';
+import { fileURLToPath } from 'url';
+
+
+// Get the current directory name
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 //3.7
-const morgan = require('morgan')
+import morgan from 'morgan';
 
 /* morgan("default",':method :url :status :res[content-length] - :response-time ms')
  */
@@ -41,12 +48,13 @@ let notes = [
     response.end(JSON.stringify(notes))
   }) */
 
-app = express()
+const app = express()
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))//':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(express.json())
+app.use(cors())
 
 morgan.token('body', function getId (req) {
-  body = req.body  
+  const body = req.body  
   const person = {
       name:body.name,
       number:body.number,
@@ -181,5 +189,5 @@ app.get('/api/persons/:id', (req, res) => {
     res.json(person)
 })
 
-const PORT = 3001
+const port = process.env.PORT || 3000;
 app.listen(PORT, ()=>{console.log(`Server running on port ${PORT}`)})
