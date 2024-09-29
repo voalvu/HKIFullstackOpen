@@ -70,7 +70,7 @@ const AddPersonForm = ({persons, setPersons, setSuccessMessage, setErrorMessage}
         .catch((error) => {
           console.error("Error updating number:", error);
           console.log("Server response:", error.response);
-          setErrorMessage(`Person '${updatedPerson.name}' was already removed from server`)
+          setErrorMessage(`Can't update person '${updatedPerson.name}'. Person may have been removed from server`)
           setTimeout(() => {setErrorMessage(null)}, 5000)
         });
       console.log("number update complete");
