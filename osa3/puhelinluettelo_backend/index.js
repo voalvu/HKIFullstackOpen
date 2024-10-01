@@ -65,14 +65,14 @@ morgan.token('body', function getId (req) {
 
 
 // Serve static files from the 'src' directory
-app.use(express.static(path.join(__dirname)));
+//app.use(express.static(path.join(__dirname)));
+app.use(express.static(path.join('dist')))
 
-
-app.get('/',(req,res)=>{
-  //res.sendFile(path.join(__dirname, 'html_file.html'));
+/* app.get('/',(req,res)=>{
+  //res.sendFile(path.join(__dirname, 'index.html'));
   //res.sendFile('C:/Users/mina/Desktop/HKIFullstackOpen/osa3/src/html_file.html');  
-  //res.send("<h1>Html hello2</h1><a href='/api/notes'>Notes</a> <a href='/api/notes/6'>Notes3</a>")
-})
+  res.send("<h1>Persons app</h1><a href='/api/persons'>Persons</a> <a href='/api/persons/1'>Person 1</a>")
+}) */
 
 app.get('/api/notes',(req,res)=>
 {   
@@ -190,4 +190,4 @@ app.get('/api/persons/:id', (req, res) => {
 })
 
 const port = process.env.PORT || 3000;
-app.listen(PORT, ()=>{console.log(`Server running on port ${PORT}`)})
+app.listen(port, ()=>{console.log(`Server running on port ${port}`)})
