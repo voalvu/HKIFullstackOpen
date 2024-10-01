@@ -18,7 +18,10 @@ const create = newObject => {
 }
 
 const update = (id,newObject)=>{
-    return axios.put(`${baseUrl}/${id}`,newObject)
+    const idType = typeof id;
+    console.log(newObject)
+    const url = idType === 'number' ? `${baseUrl}/${id}` : `${baseUrl}?id=${id}`;
+    return axios.put(url,newObject)
 }
 
 const deletePerson = personId => {
