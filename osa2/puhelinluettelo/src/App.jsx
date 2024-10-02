@@ -22,12 +22,13 @@ const Persons = ({persons,filter,setPersons,setErrorMessage,setSuccessMessage}) 
         console.log(`deleting ${per.name} with id ${per.id}`)
         personService.getById(per.id)
         .then((res)=>console.log(res))
+        console.log("heres the person",per)
         personService
           .deletePerson(per.id)
-          .then((response) => {
-            console.log("person removed", response);
+          .then((res) => {
+            console.log("person removed", per.name);
             setPersons(persons.filter((p) => p.id !== per.id));
-            setSuccessMessage(`Person ${response.data.name} deleted`)
+            setSuccessMessage(`Person ${per.name} deleted`)
             setTimeout(() => {setSuccessMessage(null)}, 5000)
           })
           .catch((error) => {

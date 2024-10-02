@@ -51,7 +51,7 @@ let notes = [
 const app = express()
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))//':method :url :status :res[content-length] - :response-time ms :body'))
 app.use(express.json())
-app.use(cors())
+app.use(cors());
 
 morgan.token('body', function getId (req) {
   const body = req.body  
@@ -147,8 +147,8 @@ app.get('/api/persons/:id', (req, res) => {
   app.delete('/api/persons/:id', (req, res) => {
     const id = req.params.id
     persons = persons.filter(person => person.id !== id)
-    
     res.status(204).end()
+    
   })
 
   const generatePhoneId = () => {
@@ -187,6 +187,13 @@ app.get('/api/persons/:id', (req, res) => {
     persons = persons.concat(person)
     console.log(person)
     res.json(person)
+})
+
+app.put('/api/persons/:id',(req,res)=>{
+  const body = req.body
+  const person = body
+  persons[persons.indexOf(persons.find(per => per.id == req.body.id))] = req.body
+  res.json(person)
 })
 
 const port = process.env.PORT || 3000;
