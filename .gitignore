@@ -2,3 +2,4 @@
 \tmep
 *\package-lock.json
 *\dist
+.env

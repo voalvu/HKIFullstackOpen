@@ -2,6 +2,15 @@ import axios from 'axios'
 
 const baseUrl='/api/persons'
 
+// test proxy
+
+/* console.log('testing proxy')
+fetch(baseUrl)
+  .then(response => response.json())
+  .then(data => console.log(data))
+  .catch(error => console.error('Error:', error));
+ */
+
 const getAll = () =>{
     return axios.get(baseUrl)
 }

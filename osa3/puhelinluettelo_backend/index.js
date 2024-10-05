@@ -5,6 +5,7 @@ import path from 'path';
 import cors from 'cors';
 import { fileURLToPath } from 'url';
 
+import Person from './models/person.js'
 
 // Get the current directory name
 const __filename = fileURLToPath(import.meta.url);
@@ -116,14 +117,20 @@ app.post('/api/notes',(req,res)=>{
     res.json(note)
 })
 
-let persons = [{id:"1",name:"first last",number:"123-123123"},
+/* let persons = [{id:"1",name:"first last",number:"123-123123"},
     {id:"2",name:"firsto lasto",number:"133-123123"},
     {id:"4",name:"firstadsf lastewr",number:"312-123123"},
     {id:"6",name:"John Finalos",number:"666-1453123"}
-]
+] */
 
-app.get('/api/persons',(req,res)=>
-    res.json(persons))
+//console.log(Person)
+
+app.get('/api/persons',(req,res)=>{
+  Person.find({}).then(result => {
+    //console.log(result)
+    res.json(result)
+  })
+})
 
 app.get('/info',(req,res)=>{
     if(persons.length != 1)
@@ -135,13 +142,14 @@ app.get('/info',(req,res)=>{
 )
 
 app.get('/api/persons/:id', (req, res) => {
-    const id = req.params.id
+    Person.findById(req.params.id).then(person => response.json(person))
+/*     const id = req.params.id
     const person = persons.find(person => person.id === id)
     if (person) {
         res.json(person)
       } else {
         res.status(404).end()
-      }
+      } */
   })
 
   app.delete('/api/persons/:id', (req, res) => {
@@ -173,20 +181,26 @@ app.get('/api/persons/:id', (req, res) => {
         return res.status(400).json({ 
             error: 'number missing' 
           })
-    }else if(persons.find(person => person.name === body.name)){
+    }/* else if(persons.find(person => person.name === body.name)){
         return res.status(400).json({ 
             error: 'name must be unique' 
           })
-    }
+    } */
+    //console.log(Person.find(body.name))
+      //then(person => response.json(person))
 
-    const person = {
+    const person = new Person({
+      name: body.name,
+      number: body.number
+    })
+/*     const person = {
         name:body.name,
         number:body.number,
         id: generatePhoneId(),
-    }
-    persons = persons.concat(person)
-    console.log(person)
-    res.json(person)
+    } */
+   person.save().then(savedPerson => {
+    res.json(savedPerson)
+   })
 })
 
 app.put('/api/persons/:id',(req,res)=>{
