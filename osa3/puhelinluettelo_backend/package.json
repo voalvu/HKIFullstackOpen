@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "build": "vite build",
-    "build:ui": "rm -rf dist && cd ../../osa2/puhelinluettelo && npm i && npm run bugityild && cp -r dist ../../osa3/puhelinluettelo_backend",
+    "build:ui": "rm -rf dist && cd ../../osa2/puhelinluettelo && npm i && npm run build && cp -r dist ../../osa3/puhelinluettelo_backend",
     "deploy:full": "npm run build:ui && git add . && git commit -m 'uibuild' && git push",
     "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
