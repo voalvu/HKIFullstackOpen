@@ -27,14 +27,14 @@ const create = newObject => {
 }
 
 const update = (id,newObject)=>{
-    const url = `${baseUrl}/${parseInt(id)}`;
+    const url = `${baseUrl}/${id}`;
     return axios.put(url,newObject)
 }
 
 const deletePerson = personId => {
     const idType = typeof personId;
     console.log(idType,personId)
-    const url = idType === 'number' ? `${baseUrl}/${personId}` : `${baseUrl}/${parseInt(personId)}`;
+    const url = idType === 'number' ? `${baseUrl}/${personId}` : `${baseUrl}/${personId}`;
     return axios.delete(url);
   };
 

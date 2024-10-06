@@ -13,7 +13,15 @@ const Filter = ({setFil}) => {
 
 const Persons = ({persons,filter,setPersons,setErrorMessage,setSuccessMessage}) =>{
   console.log(typeof(persons),persons)
-    const personsToShow = persons.filter(per => per.name.toLowerCase().includes(filter.toLowerCase()))
+    // This breaks if there's no name attribute in all person objects
+    const personsToShow = persons.filter(per => {
+      console.log(per); 
+      if(per.name){
+        return per.name.toLowerCase().includes(filter.toLowerCase())
+      }else{
+        console.log("No name attrib in Person object")
+      }
+    })
     console.log(personsToShow)
 
     const handlePersonRemoval = (e, per) => {
@@ -82,12 +90,28 @@ const AddPersonForm = ({persons, setPersons, setSuccessMessage, setErrorMessage}
         e.preventDefault()
         let inputName = e.target[0].value
         let inputNum = e.target[1].value
-        
+        console.log(persons)
         const nameAlreadyExists = 
-          persons.map(per => per.name.replaceAll(" ",'')).includes(inputName.replaceAll(' ',""))
+          persons.map(per => {
+            console.log(per)
+            if(per.name){
+              return per.name.replaceAll(" ",'').includes(inputName.replaceAll(' ',""))
+            }else{
+              console.log("person object has no name")
+            }
+          }
+        )
         
-        const found = Array.from(persons).find(per => per.name.replaceAll(" ",'').includes(inputName.replaceAll(' ',"")))
-        if(nameAlreadyExists){
+        const found = Array.from(persons).find(per => {
+          if(per.name){
+            return per.name.replaceAll(" ",'').includes(inputName.replaceAll(' ',""))
+          }else{
+            console.log("person object has no name")
+          }
+        }
+      )
+        if(nameAlreadyExists.includes(true)){
+          console.log(nameAlreadyExists,found)
             if(found.number !== inputNum){
               handleNumberUpdate(found,inputNum)}
               else{
@@ -157,9 +181,10 @@ const App = () => {
   useEffect(() => {
     console.log('persons getAll effect')
     personService.getAll()    
-      .then(response => {        
-        console.log('persons getAll promise fulfilled')        
-        setPersons(response.data)      
+      .then(res => {        
+        console.log('persons getAll promise fulfilled')
+        console.log(res)   
+        setPersons(res.data)      
       })}
 , [])
       console.log('render',persons.length,'persons')
