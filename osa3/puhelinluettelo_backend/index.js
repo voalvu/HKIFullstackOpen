@@ -58,6 +58,11 @@ const errorHandler = (error, request, response, next) => {
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' });
   }
+
+  if (error.name === 'ValidationError') {
+    //console.log(error.message)
+    return response.status(400).send({ error: error.message });
+  }
   next(error);
 };
 
@@ -151,11 +156,19 @@ app.post('/api/persons',(req,res, next)=>{
 )
 
 app.put('/api/persons/:id',(req,res,next)=>{
-/*   const body = req.body */
+  const {name, number} = req.body
 /*   const person = body */
-  Person.findByIdAndUpdate(req.params.id,req.body)
-    .then(res.json(req.body))
-    .catch(error=>next(error))
+  Person.findByIdAndUpdate(
+    req.params.id,
+    {name, number}, 
+    { new: true, runValidators: true, context: 'query'}
+  )
+    .then( updatedPerson =>
+      res.json(updatedPerson)
+    )
+    .catch(
+      error=>next(error)
+    )
 /*   persons[persons.indexOf(persons.find(per => per.id == req.body.id))] = req.body
    */
 })
