@@ -73,13 +73,17 @@ app.get('/api/persons',(req,res)=>{
 })
 
 app.get('/info',(req,res)=>{
-    if(persons.length != 1)
-        res.send(`<p>Phonebook has info for ${persons.length} people</p><p>${new Date().toString()}</p>`)
+  //Ignoring entries without a name field
+  Person.find({}).then(result =>{
+    //console.log(result)
+    const withNames = result.filter(per=>{console.log(per.name); if(per.name){return per}else{return}})
+    if(withNames.length != 1)
+      res.send(`<p>Phonebook has info for ${withNames.length} people</p><p>${new Date().toString()}</p>`)
     else{
         res.send(`<p>Phonebook has info for 1 person</p> <p>${new Date().toString()}</p>`)
     }
-  } 
-)
+  })
+})
 
 app.get('/api/persons/:id', (req, res, next) => {
   Person.findById(req.params.id)
