@@ -11,32 +11,32 @@ fetch(baseUrl)
   .catch(error => console.error('Error:', error));
  */
 
-const getAll = () =>{
-    return axios.get(baseUrl)
+const getAll = () => {
+  return axios.get(baseUrl)
 }
 
 const getById = (id) => {
-    // Check if the ID is a number or a string
-    const idType = typeof id;
-    const url = idType === 'number' ? `${baseUrl}/${id}` : `${baseUrl}?id=${id}`;
-    return axios.get(url)
+  // Check if the ID is a number or a string
+  const idType = typeof id
+  const url = idType === 'number' ? `${baseUrl}/${id}` : `${baseUrl}?id=${id}`
+  return axios.get(url)
 }
 
 const create = newObject => {
-    return axios.post(baseUrl,newObject)
+  return axios.post(baseUrl,newObject)
 }
 
-const update = (id,newObject)=>{
-    const url = `${baseUrl}/${id}`;
-    return axios.put(url,newObject)
+const update = (id,newObject) => {
+  const url = `${baseUrl}/${id}`
+  return axios.put(url,newObject)
 }
 
 const deletePerson = personId => {
-    const idType = typeof personId;
-    console.log(idType,personId)
-    const url = idType === 'number' ? `${baseUrl}/${personId}` : `${baseUrl}/${personId}`;
-    return axios.delete(url);
-  };
+  const idType = typeof personId
+  console.log(idType,personId)
+  const url = idType === 'number' ? `${baseUrl}/${personId}` : `${baseUrl}/${personId}`
+  return axios.delete(url)
+}
 
 
 /* const deletePerson = id =>{
@@ -58,9 +58,9 @@ const deletePerson = personId => {
 } */
 
 export default {
-    getAll: getAll,
-    getById: getById,
-    create: create,
-    update: update,
-    deletePerson: deletePerson,
+  getAll: getAll,
+  getById: getById,
+  create: create,
+  update: update,
+  deletePerson: deletePerson,
 }
