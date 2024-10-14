@@ -1,24 +1,32 @@
+const config = require('./utils/config.js')
 const express = require('express')
+require('express-async-errors')
+
 const app = express()
 const cors = require('cors')
-const {} = require('./utils/config')
 const blogsRouter = require('./controllers/blogs')
-const middleware = require('./utils/middleware.js')
+const middleware = require('./utils/middleware')
+const logger = require('./utils/logger.js')
+
 const mongoose = require('mongoose')
+mongoose.set('strictQuery', false)
 
-//const Blog = mongoose.model('Blog', blogSchema)
+logger.info('connecting to',config.MONGODB_URI)
 
-const mongoUrl = process.env.MONGODB_URI// 'mongodb://localhost/bloglist'
+const mongoUrl = config.MONGODB_URI// 'mongodb://localhost/bloglist'
 mongoose.connect(mongoUrl).then(() => {    console.log('connected to MongoDB')  })  .catch((error) => {    console.log('error connecting to MongoDB:', error.message)  })
 
 app.use(cors())
 app.use(express.static('dist'))
 app.use(express.json())
 
-// TODO: logger
+app.use(middleware.requestLogger)
 
 app.use('/api/blogs', blogsRouter)
 
-// TODO: middleware
+app.use(middleware.unknownEndpoint)
+
+app.use(middleware.errorHandler)
+
 
 module.exports = app
