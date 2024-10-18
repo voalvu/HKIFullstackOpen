@@ -10,7 +10,6 @@ usersRouter.post('/', async (request, response) => {
     return
   }
   const currentUsers = await User.find({})
-  console.log(currentUsers)
   if (currentUsers.filter((user) => user.username === username).length != 0){
     response.status(400).json({error:"username not free."})
     return
