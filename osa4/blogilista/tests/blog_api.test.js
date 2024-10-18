@@ -4,6 +4,7 @@ const supertest = require( 'supertest')
 const app = require( '../app')
 const assert = require( 'node:assert')
 const Blog = require( '../models/blog')
+const User = require( '../models/user')
 //const helper = require('./test_helper')
 
 const api = supertest(app)
@@ -53,9 +54,9 @@ test('id field is "id" and not _id', async () =>{
 })
 
 
-
-describe.only('adding blogs',()=>{
-  test.only('succeed with valid data is added',async ()=>
+//TODO: TEST ACCOUNT LOGIN TOKEN
+describe('adding blogs',()=>{
+  test('succeed with valid data is added',async ()=>
   {
     const validBlog = {
       title: "valid title",
@@ -95,7 +96,8 @@ describe.only('adding blogs',()=>{
         assert.strictEqual(Object.entries(res.body[initialBlogs.length]).every((k)=>{return k[1]!==null && k[1]!==undefined}),true)
     })
 
-  test.only('invalid data is not added', async () => {
+//TODO: TEST ACCOUNT LOGIN TOKEN
+  test('invalid data is not added', async () => {
     const newBlog = {
       //title: "title",
       url:"url.url",
@@ -144,8 +146,8 @@ describe.only('adding blogs',()=>{
 
   })
 })
-describe.only('deleting blogs',()=>{
-test.only('succeed with valid id ', async ()=>{
+describe('deleting blogs',()=>{
+test('succeed with valid id ', async ()=>{
   let res= await api.get('/api/blogs')
   console.log(res.body[0].id)
   await api
@@ -158,7 +160,7 @@ test.only('succeed with valid id ', async ()=>{
 
   })
 
-test.only('fail with invalid id', async ()=>{
+test('fail with invalid id', async ()=>{
 
   await api
     .delete('/api/blogs/'+"invalid49589345")
@@ -171,7 +173,7 @@ test.only('fail with invalid id', async ()=>{
   })
 })
 
-describe.only('editing blog',()=>{
+describe('editing blog',()=>{
   test.only("edit single blog",async()=>{
     let res = await api.get('/api/blogs')
     const originalTitle = res.body[0].title
@@ -202,6 +204,69 @@ describe.only('editing blog',()=>{
 
     res = await api.get(`/api/blogs/${editedBlog.id}`)
     assert.strictEqual(res.body.likes, likes+1)
+  })
+})
+
+
+
+describe.only('test user creation',()=>{
+  const testUsernames = ['testuser1','testuser2','testuser3']
+  beforeEach(async ()=>{
+    const users = await User.find({})
+    const filtered = users.filter((u)=>testUsernames.includes(u.username))
+    for( let u of filtered){
+      await User.findByIdAndDelete(u._id)
+    }
+    
+  })
+  test.only('creating testuser1',async ()=>{
+    const testUser1 = {username:"testuser1",password:"test123"}
+    const res = await api.post('/api/users').send(testUser1).expect(201)
+    const users = await User.find({username:"testuser1"})
+    assert.strictEqual(users.length, 1)
+  })
+
+  test.only('creating testuser2 with passworld too short',async ()=>{
+    const testUser2 = {username:"testuser2",password:"p"}
+    const res = await api.post('/api/users').send(testUser2).expect(400)
+    console.log(res.body)
+    const users = await User.find({username:"testuser2"})
+    assert.strictEqual(users.length, 0)
+  })
+
+  test.only('creating user without username',async ()=>{
+    const testUser1 = {username:"",password:"pass"}
+    const testUser2 = {username:null,password:"pass"}
+    const testUser3 = {username:undefined,password:"pass"}
+
+    const usersInitial = await User.find({})
+
+    let res = await api.post('/api/users').send(testUser1).expect(400)
+    console.log(res.body)
+    res = await api.post('/api/users').send(testUser2).expect(400)
+    console.log(res.body)
+    res = await api.post('/api/users').send(testUser3).expect(400)
+    console.log(res.body)
+    const users = await User.find({})
+
+    assert.strictEqual(usersInitial.length, users.length)
+  })
+
+  
+  test.only('creating user with existing username',async ()=>{
+    const testUser1 = {username:"testuser1",password:"pass"}
+    const testUser2 = {username:"testuser1",password:"pass"}
+    const testUser3 = {username:undefined,password:"pass"}
+
+    const usersInitial = await User.find({})
+
+    let res = await api.post('/api/users').send(testUser1).expect(201)
+    console.log(res.body)
+    res = await api.post('/api/users').send(testUser2).expect(400)
+    console.log(res.body)
+    const users = await User.find({})
+
+    assert.strictEqual(usersInitial.length+1, users.length)
   })
 })
 
