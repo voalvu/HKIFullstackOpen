@@ -8,7 +8,10 @@ const blogsRouter = require('./controllers/blogs')
 const middleware = require('./utils/middleware')
 const loginRouter = require('./controllers/login')
 const usersRouter = require('./controllers/users')
+const imageRouter = require('./controllers/image.js')
+
 const logger = require('./utils/logger.js')
+
 
 const mongoose = require('mongoose')
 mongoose.set('strictQuery', false)
@@ -20,7 +23,7 @@ mongoose.connect(mongoUrl).then(() => {    console.log('connected to MongoDB')  
 
 app.use(cors())
 app.use(express.static('dist'))
-app.use(express.json())
+app.use(express.json({ limit: '10mb' }));
 
 app.use(middleware.requestLogger)
 app.use(middleware.tokenExtractor)
@@ -28,6 +31,7 @@ app.use(middleware.tokenExtractor)
 app.use('/api/blogs', blogsRouter)
 app.use('/api/login',loginRouter)
 app.use('/api/users', usersRouter)
+app.use('/api/images', imageRouter)
 
 
 app.use(middleware.unknownEndpoint)
