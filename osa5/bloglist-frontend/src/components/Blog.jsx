@@ -3,13 +3,17 @@ import blogsService from '../services/blogs'
 
 import { useState } from 'react'
 
-const Blog = ({ blog,user }) => {
+const Blog = ({ blog,user, onLike }) => {
   const [blogState, setBlogState] = useState(blog)
 
   const addLike = async (blog) => {
     console.log(blog.id)
-    const updatedBlog = await blogsService.update(blog.id, { ...blog,likes:blog.likes+1 })
-    setBlogState(updatedBlog)
+    if(onLike){
+      onLike()
+    }else{
+      const updatedBlog = await blogsService.update(blog.id, { ...blog,likes:blog.likes+1 })
+      setBlogState(updatedBlog)
+    }
   }
 
   if(blogState === null){
@@ -30,7 +34,6 @@ const Blog = ({ blog,user }) => {
             setBlogState(null)
           }}}>remove</button> : null : null}
         </Togglable>
-        <Togglable>Unohtu</Togglable>
       </div>
     </>
   )

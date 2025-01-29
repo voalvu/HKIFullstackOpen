@@ -117,6 +117,8 @@ const App = () => {
 
       )}
       <button onClick={() => {console.log(blogs)}}> blogs</button>
+      hello
+      <Blog blog={null}>helllo blog</Blog>
     </div>
   )
 }
