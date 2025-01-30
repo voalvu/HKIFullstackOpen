@@ -27,7 +27,7 @@ const Blog = ({ blog,user, onLike }) => {
         <Togglable buttonLabel="view">
 
           {blogState.url} <br/>
-        likes: {blogState.likes} <button onClick={() => addLike(blogState)}>♥</button> <br/>
+        likes: {blogState.likes} <button id="like-button" onClick={() => addLike(blogState)}>like ♥</button> <br/>
           {blogState.user[0].username} <br/>
           {user!==null ? blogState.user[0].username === user.username ? <button onClick={() => {if(window.confirm(`Are you sure you want to remove blog ${blogState.title} by ${blogState.author} ?`)){
             blogsService.remove(blogState.id)

@@ -23,7 +23,8 @@ const App = () => {
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
     //console.log(loggedUserJSON)
-    if(loggedUserJSON !=='null'){
+    // DIFFERENT BETWEEN BROWSERS...
+    if(loggedUserJSON && loggedUserJSON !== 'null'){
       const user = JSON.parse(loggedUserJSON)
       setUser(user)
       blogService.setToken(user.token)
@@ -47,6 +48,7 @@ const App = () => {
         window.localStorage.setItem('loggedBlogappUser',JSON.stringify(user))
         blogService.setToken(user.token)
         setNotification([`logged in user ${user.username}`,'green'])
+        //loginTogglable.current.toggleVisibility() // Close login form
       }
     } catch (exception) {
       setNotification([`error logging in: ${exception.request.response}`,'red'])
@@ -66,6 +68,7 @@ const App = () => {
       setBlogs(blogs.concat(newBlogCreated))
       setNotification([`a new blog ${newBlogCreated.title} by ${newBlogCreated.author} added`,'green']
       )
+      newBlogTogglable.current.toggleVisibility() // Close new blog form
       return newBlogCreated
     } catch (exception) {
       setNotification([`error adding blog ${exception.request.response}`,'red'])
@@ -78,8 +81,8 @@ const App = () => {
     return(<>
       <Togglable buttonLabel="login" ref={loginTogglable}>
         <h2>login</h2>
-          username<input type="text" onChange={({ target }) => setUsername(target.value)}/>
-          password<input type="text" onChange={({ target }) => setPassword(target.value)}/>
+          username<input data-testid='username'  type="text" onChange={({ target }) => setUsername(target.value)}/>
+          password<input data-testid='password' type="text" onChange={({ target }) => setPassword(target.value)}/>
         <button onClick={handleLogin}>login</button>
       </Togglable>
     </>
@@ -90,8 +93,6 @@ const App = () => {
       <button onClick={handleLogout}>logout</button>
     </>)
   }
-
-
 
   const newBlog = () => {
     return(<>
@@ -117,7 +118,7 @@ const App = () => {
 
       )}
       <button onClick={() => {console.log(blogs)}}> blogs</button>
-      hello
+      
       <Blog blog={null}>helllo blog</Blog>
     </div>
   )
