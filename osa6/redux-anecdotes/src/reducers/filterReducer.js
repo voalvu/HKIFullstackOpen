@@ -1,10 +1,25 @@
+import {createSlice} from '@reduxjs/toolkit'
+
 const filterAtStart = ''
-  
-  export const changeFilter = (newFilter) =>{
+const initialState = {filter:filterAtStart}
+
+const filterSlice = createSlice({
+    name:'filter',
+    initialState,
+    reducers:{
+        changeFilter(state,action){
+            return {...state, filter:action.payload}
+        }
+    }
+})
+
+export const {changeFilter} = filterSlice.actions
+export default filterSlice.reducer
+
+/*   export const changeFilter = (newFilter) =>{
     console.log(newFilter)
     return { type:'CHANGE',data:newFilter}
   }
-  const initialState = {filter:filterAtStart}
   
   const reducer = (state = initialState, action) => {
     console.log('state now: ', state)
@@ -19,4 +34,4 @@ const filterAtStart = ''
   }
 
   
-  export default reducer
+  export default reducer */
