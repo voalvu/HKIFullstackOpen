@@ -1,11 +1,35 @@
 import { useQuery, useMutation,useQueryClient } from '@tanstack/react-query'
 import axios from 'axios'
+import { useReducer } from 'react'
 
 import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 
+import NotificationContext from './NotificationContext'
+
+const notificationReducer = (state, action) => {
+  switch (action.type) {
+    case "NEW":
+        console.log("action data",action.data)
+        return `added ${action.data.content}`
+    case "CLEAR":
+      return ''
+    case "ERROR":
+        if(action.data.text){
+          return action.data.text
+        }
+        console.log(action.data.request.response)
+        return `couldnt add: ${action.data.request.response}`
+    case "VOTE":
+        return `voted ${action.data.content}`
+    default:
+        return state
+  }
+}
+
 const App = () => {
-  
+  const [notification, notificationDispatch] = useReducer(notificationReducer, null)
+
   const queryClient = useQueryClient()
   
   const getAnecdotes = () =>{
@@ -24,6 +48,12 @@ const App = () => {
       // This avoids a GET request compared to queryInvalidation
       const newAnecdotes = anecdotes.map((a) => {return a.id === votedAnecdote.id ? votedAnecdote : a});
       queryClient.setQueryData(['anecdotes'],newAnecdotes);
+      notificationDispatch({type:"VOTE",data:votedAnecdote});
+      setTimeout(()=>{notificationDispatch({type:"CLEAR"})},5000);
+  },
+  onError:(response)=>{
+    notificationDispatch({type:"ERROR",data:{text:"couldn't vote for some reason."}});
+    setTimeout(()=>{notificationDispatch({type:"CLEAR"})},5000);
   }})
 
   const handleVote = (anecdote) => {
@@ -54,7 +84,8 @@ const App = () => {
   console.log(anecdotes)
 
   return (
-    
+    <NotificationContext.Provider value={[notification, notificationDispatch]}>
+
     <div>
       {anecdotes !== undefined ?
       
@@ -65,7 +96,7 @@ const App = () => {
       <AnecdoteForm />
 
       {
-      anecdotes.map(anecdote => {console.log(anecdote);return(
+      anecdotes.map(anecdote => {return(
         
         <div key={anecdote.id}>
           <div>
@@ -80,6 +111,7 @@ const App = () => {
       </div> :<div> <p>problems with the anecdote server</p></div>
     }
     </div>
+    </NotificationContext.Provider>
   )
 }
 
