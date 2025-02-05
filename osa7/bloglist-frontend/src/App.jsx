@@ -3,20 +3,34 @@ import Blog from './components/Blog'
 import Togglable from './components/Togglable'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
+import Users from './components/Users'
+import SingleUser from './components/SingleUser'
 import blogService from './services/blogs'
 //import user from '../../../osa4/blogilista/models/user'
 import loginService from './services/login'
-
+import { BrowserRouter as Router, useNavigate, Routes, Route, useMatch, Link } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { setNotification } from './reducers/notification'
 import { initializeBlogs, addNewBlog } from './reducers/blog'
 import { setUser, setUsername, setPassword, handleLogin } from './reducers/user'
 
+const Menu = () => {
+  const padding = {
+    paddingRight: 5
+  }
+  return (
+    <div>
+      <Link to='/' style={padding}>home</Link>
+      <Link to='/users' style={padding}>view users</Link>
+    </div>
+  )
+}
+
+
 const App = () => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-
   const dispatch = useDispatch()
   const blogsGot = useRef(false)
   useEffect(() => {
@@ -49,24 +63,6 @@ const App = () => {
     }
   },[])
 
-  /*   const handleLogin = async (event) => {
-    event.preventDefault()
-    try {
-      //const user = await loginService.login(username,password)
-      const userRes = dispatch(handleLogin())
-      console.log(userRes)
-      if(userRes){
-        setUser(userRes)
-        window.localStorage.setItem('loggedBlogappUser',JSON.stringify(user))
-        blogService.setToken(user.token)
-        dispatch(setNotification([`logged in user ${user.username}`,'green'],5))
-        //loginTogglable.current.toggleVisibility() // Close login form
-      }
-    } catch (exception) {
-      dispatch(setNotification([`error logging in: ${exception.request.response}`,'red'],5))
-      console.log(exception)
-    }
-  } */
   const handleLogout = (event) => {
     event.preventDefault()
     dispatch(setUser(null))
@@ -130,21 +126,33 @@ const App = () => {
   const loginTogglable = useRef()
 
   return (
-    <div>
-      <h2>blogs</h2>
-      <Notification/>
-      {/*       {notification === null ? null : <div id="notification" style={{ color:notification[1] }}>{notification[0]}</div>}
- */}      {user.token === null || user.token===undefined ? login() : <><div><span style={{color:user.color}}>{user.username}</span> logged in</div> {logout()}</>}
-      {user===null ? <div>please login to create new blogs</div> : newBlog()}
+    <Router>
+      <div>
 
-      {blogs.map(blog =>
-        <Blog key={blog.id} blog={blog} user={user} />
+        <h2>blogs</h2>
+        <Menu></Menu>
+        <Notification/>
+        {/*       {notification === null ? null : <div id="notification" style={{ color:notification[1] }}>{notification[0]}</div>}
+ */}      {user.token === null || user.token===undefined ? login() : <><div><span style={{ color:user.color }}>{user.username}</span> logged in</div> {logout()}</>}
+        {user===null ? <div>please login to create new blogs</div> : newBlog()}
 
-      )}
-      <button onClick={() => {console.log(blogs)}}> blogs</button>
+        {blogs.map(blog =>
+          <Blog key={blog.id} blog={blog} user={user} />
 
-      <Blog blog={null}>helllo blog</Blog>
-    </div>
+        )}
+        <button onClick={() => {console.log(blogs)}}> blogs</button>
+
+        <Blog blog={null}>helllo blog</Blog>
+        <Routes>
+          <Route path='/users' element={<Users/>
+          }>
+          </Route>
+          <Route path="/users/:id" element={<SingleUser />} />
+
+        </Routes>
+        <Link to='/users/:id'></Link>
+      </div>
+    </Router>
   )
 }
 
