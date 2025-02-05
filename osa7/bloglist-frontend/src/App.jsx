@@ -11,13 +11,12 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { setNotification } from './reducers/notification'
 import { initializeBlogs, addNewBlog } from './reducers/blog'
-
+import { setUser, setUsername, setPassword, handleLogin } from './reducers/user'
 
 const App = () => {
-  //const [blogs, setBlogs] = useState([])
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  const [user, setUser] = useState(null)
+
   const dispatch = useDispatch()
   const blogsGot = useRef(false)
   useEffect(() => {
@@ -33,23 +32,31 @@ const App = () => {
     return state.blogs // blogs.sort((a,b) => b.likes - a.likes)
   })
 
+  const user = useSelector(state => {
+    return state.user
+  })
+
   useEffect(() => {
     const loggedUserJSON = window.localStorage.getItem('loggedBlogappUser')
-    //console.log(loggedUserJSON)
+    console.log('LOGGED USER JSON',loggedUserJSON)
     // DIFFERENT BETWEEN BROWSERS...
     if(loggedUserJSON && loggedUserJSON !== 'null'){
       const user = JSON.parse(loggedUserJSON)
-      setUser(user)
+      console.log('USER PARSED',user)
+      dispatch(setUser( user.username,user.token,user.color ))
       blogService.setToken(user.token)
+
     }
   },[])
 
-  const handleLogin = async (event) => {
+  /*   const handleLogin = async (event) => {
     event.preventDefault()
     try {
-      const user = await loginService.login(username,password)
-      if(user){
-        setUser(user)
+      //const user = await loginService.login(username,password)
+      const userRes = dispatch(handleLogin())
+      console.log(userRes)
+      if(userRes){
+        setUser(userRes)
         window.localStorage.setItem('loggedBlogappUser',JSON.stringify(user))
         blogService.setToken(user.token)
         dispatch(setNotification([`logged in user ${user.username}`,'green'],5))
@@ -59,12 +66,11 @@ const App = () => {
       dispatch(setNotification([`error logging in: ${exception.request.response}`,'red'],5))
       console.log(exception)
     }
-  }
+  } */
   const handleLogout = (event) => {
     event.preventDefault()
-    setUser(null)
+    dispatch(setUser(null))
     window.localStorage.setItem('loggedBlogappUser',null)
-    blogService.setToken(null)
     dispatch(setNotification(['logged out','green'],5))
   }
   const handleNewBlog = async (newBlog,callback) => {
@@ -76,7 +82,7 @@ const App = () => {
       ))
       newBlogTogglable.current.toggleVisibility() // Close new blog form
       if (callback) {
-        callback();
+        callback()
       }
       //return newBlog
     } catch (exception) {
@@ -91,10 +97,17 @@ const App = () => {
     return(<>
       <Togglable buttonLabel="login" ref={loginTogglable}>
         <h2>login</h2>
-          username<input data-testid='username'  type="text" onChange={({ target }) => setUsername(target.value)}/>
-          password<input data-testid='password' type="text" onChange={({ target }) => setPassword(target.value)}/>
-        <button onClick={handleLogin}>login</button>
+        <form onSubmit={(event) => {
+          event.preventDefault();console.log(user)
+          window.localStorage.setItem('loggedBlogappUser',JSON.stringify(user))
+          dispatch(handleLogin(username,password))}}
+        >
+          username<input data-testid='username'  type="text" onChange={({ target }) => setUsername(target.value)}/><br/>
+          password<input data-testid='password' type="password" onChange={({ target }) => setPassword(target.value)}/><br/>
+          <button type='submit'>login</button>
+        </form>
       </Togglable>
+      <br/>
     </>
     )
   }
@@ -121,7 +134,7 @@ const App = () => {
       <h2>blogs</h2>
       <Notification/>
       {/*       {notification === null ? null : <div id="notification" style={{ color:notification[1] }}>{notification[0]}</div>}
- */}      {user === null ? login() : <><div>{user.username} logged in</div> {logout()}</>}
+ */}      {user.token === null || user.token===undefined ? login() : <><div><span style={{color:user.color}}>{user.username}</span> logged in</div> {logout()}</>}
       {user===null ? <div>please login to create new blogs</div> : newBlog()}
 
       {blogs.map(blog =>
