@@ -11,14 +11,14 @@ const BlogForm = ({ createBlog }) => {
 
   const addBlog = async (event) => {
     event.preventDefault()
-    const newBlog = { title,author,url };
+    const newBlog = { title,author,url }
     createBlog(newBlog, () => {
-      setTitle('');
-      setAuthor('');
-      setUrl('');
-    });
-    
-/*     if(!(typeof(response) === 'string' && response.includes('error')))
+      setTitle('')
+      setAuthor('')
+      setUrl('')
+    })
+
+    /*     if(!(typeof(response) === 'string' && response.includes('error')))
     {
       setTitle('')
       setAuthor('')

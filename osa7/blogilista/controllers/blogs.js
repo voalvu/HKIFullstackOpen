@@ -39,6 +39,37 @@ blogsRouter.post('/', userExtractor, async (request, response) => {
 
 })
 
+// add comment
+blogsRouter.post('/:id/comments', /* userExtractor, */ async (request, response) => {
+/*   if(!request.token){
+    response.status(401).json({error: 'token invalid'})
+  }
+  const decodedToken = jwt.verify(request.token,process.env.SECRET)
+  if(!decodedToken.id){
+    return response.status(401).json({error: 'token invalid'})
+  } */
+  const body=request.body
+ // const blog = new Blog(request.body)
+  /* const blog = new Blog({title: body.title,user:request.user._id, author:body.author, url:body.url, likes:body.likes})
+
+  const savedBlog = await blog.save()
+
+  request.user.blogs = request.user.blogs.concat(savedBlog._id)
+  await request.user.save()
+   */
+  console.log('COMMENT BODY',body)
+  const blog = {
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    likes: body.likes,
+    comments: body.comments
+  }
+  const res = await Blog.findByIdAndUpdate(request.params.id, blog, {new: true}).populate('user',{username:1,name:1})/* .populate('comments',{content:1}) */
+  response.json(res)
+
+})
+
 blogsRouter.put('/:id', userExtractor, async(request,response)=>{
   const body = request.body
   const blog = {

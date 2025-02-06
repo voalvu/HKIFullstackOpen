@@ -144,7 +144,7 @@ describe('Blog app', () => {
 
     const content = await page.content()
     //console.log(content)
-    
+
     const view_buttons = await page.locator('button:has-text("view")')
     console.log(content)
     console.log(await view_buttons.all())
@@ -166,13 +166,13 @@ describe('Blog app', () => {
         await like_buttons.nth(j).click()
         //await page.waitForTimeout(200)
       }
-    //   await page.screenshot({ path: i+'afterr_screenshot.png' })
+      //   await page.screenshot({ path: i+'afterr_screenshot.png' })
       await logoutWith(page)
     }
-    
+
     await loginWith(page, 'mluukkai', 'salainen')
     await like_buttons.nth(3).click()
-    
+
     await like_buttons.nth(3).click()
     // await page.screenshot({ path: '4thnoyopenafterr_screenshot.png' })
 
@@ -185,21 +185,21 @@ describe('Blog app', () => {
 
 
 
-    await page.reload();
+    await page.reload()
     await page.waitForTimeout(500)
 
     // await page.screenshot({ path: 'final_afterr_screenshot.png' })
-    const contentFinally = await page.content();
-    const likesList = [];
-    const regex = /likes: (\d+)/g;
-    let match;
+    const contentFinally = await page.content()
+    const likesList = []
+    const regex = /likes: (\d+)/g
+    let match
     while ((match = regex.exec(contentFinally)) !== null) {
-      likesList.push(parseInt(match[1]));
+      likesList.push(parseInt(match[1]))
     }
-    console.log(likesList);
+    console.log(likesList)
 
     for (let i = 0; i < likesList.length - 1; i++) {
-      expect(likesList[i]).toBeGreaterThanOrEqual(likesList[i + 1]);
+      expect(likesList[i]).toBeGreaterThanOrEqual(likesList[i + 1])
     }
   })
 })

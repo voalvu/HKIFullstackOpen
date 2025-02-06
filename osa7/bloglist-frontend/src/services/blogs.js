@@ -4,7 +4,7 @@ const baseUrl = '/api/blogs'
 let token = null
 
 const setToken = newToken => {
-  console.log("SET TOKEN",newToken)
+  console.log('SET TOKEN',newToken)
   token = `Bearer ${newToken}`
 }
 
@@ -37,5 +37,10 @@ const remove = async(id) => {
   const response = await axios.delete(`${baseUrl}/${id}`,config)
   return response.data
 }
+const addComment = async(id, content) => {
 
-export default { getAll, create, update, setToken, remove }
+  const response = await axios.post(`${baseUrl}/${id}/comments`,content)
+  return response.data
+}
+
+export default { getAll, create, update, setToken, remove, addComment }

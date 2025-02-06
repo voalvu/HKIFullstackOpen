@@ -8,8 +8,8 @@ const blogSlice = createSlice({
   initialState,
   reducers:{
     addNew(state, action) {
-        console.log("STATE",state)
-        console.log("ACITON",action)
+      console.log('STATE',state)
+      console.log('ACITON',action)
       state.push(action.payload)
     },
     setBlogs(state, action) {
@@ -37,19 +37,31 @@ export const addNewBlog = (blog) => {
   }
 }
 
-export const likeBlog = (blog) =>{
-    return async dispatch => {
-        const response = await blogService.update(blog.id,{...blog,likes:blog.likes+1})
-        console.log("LIKED",response)
-        dispatch(setBlogs(await blogService.getAll()))
-    }
+export const likeBlog = (blog) => {
+  return async dispatch => {
+    const response = await blogService.update(blog.id,{ ...blog,likes:blog.likes+1 })
+    console.log('LIKED',response)
+    dispatch(setBlogs(await blogService.getAll()))
+  }
 }
-export const removeBlog = (blog) =>{
-    console.log("REMOVING",blog)
-    return async dispatch => {
-        const response = await blogService.remove(blog)
-        dispatch(setBlogs(await blogService.getAll()))
-    }
+export const removeBlog = (blog) => {
+  console.log('REMOVING',blog)
+  return async dispatch => {
+    const response = await blogService.remove(blog)
+    dispatch(setBlogs(await blogService.getAll()))
+  }
+}
+
+export const addComment = (blogState, id, comment) => {
+  let newComments = [...blogState.comments]
+  newComments.push(comment)
+  console.log(newComments)
+  console.log({ ...blogState })
+  console.log('IN REDUCER, adding commnet', comment)
+  return async dispatch => {
+    await blogService.addComment(id,{ ...blogState,comments:newComments })
+    dispatch(setBlogs(await blogService.getAll()))
+  }
 }
 /*
 export const setNotification = (newBlog) => {

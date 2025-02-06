@@ -9,9 +9,9 @@ const loginWith = async (page, username, password)  => {
 const createBlog = async (page, content) => {
   await page.getByRole('button', { name: 'new blog' }).click()
   let txtBoxes = await page.getByRole('textbox').all()
-    await txtBoxes[0].fill(content[0])
-    await txtBoxes[1].fill(content[1])
-    await txtBoxes[2].fill(content[2])
+  await txtBoxes[0].fill(content[0])
+  await txtBoxes[1].fill(content[1])
+  await txtBoxes[2].fill(content[2])
 
   await page.getByRole('button', { name: 'save and submit' }).click()
   return
