@@ -124,7 +124,16 @@ const App = () => {
   }
   const newBlogTogglable = useRef()
   const loginTogglable = useRef()
-
+  const Blogs = ({blogs,user}) => {return(
+    <>
+      <div>
+        {console.log('BLOGS IN MAIN PAGE',blogs)}
+        {blogs.map(blog =>
+          <Blog key={blog.id} blog={blog} user={user} />
+        )}
+      </div>
+    </>)
+  }
   return (
     <Router>
       <div>
@@ -136,19 +145,17 @@ const App = () => {
  */}      {user.token === null || user.token===undefined ? login() : <><div><span style={{ color:user.color }}>{user.username}</span> logged in</div> {logout()}</>}
         {user===null ? <div>please login to create new blogs</div> : newBlog()}
 
-        {blogs.map(blog =>
-          <Blog key={blog.id} blog={blog} user={user} />
 
-        )}
         <button onClick={() => {console.log(blogs)}}> blogs</button>
 
-        <Blog blog={null}>helllo blog</Blog>
+        {/* <Blog blog={null}>helllo blog</Blog> */}
         <Routes>
+          <Route path="/" element = {<Blogs blogs={blogs} user={user}/>}></Route>
           <Route path='/users' element={<Users/>
           }>
           </Route>
           <Route path="/users/:id" element={<SingleUser />} />
-
+          <Route path="/blogs/:id" element={<Blog />} />
         </Routes>
         <Link to='/users/:id'></Link>
       </div>

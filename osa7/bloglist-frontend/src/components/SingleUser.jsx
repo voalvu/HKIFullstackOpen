@@ -7,7 +7,7 @@ const SingleUser = () => {
   useEffect(() => {
     const fetchUsers = async () => {
       const gotUsers = await userService.getAll()
-      setUsers(gotUsers.data)
+      setUsers(gotUsers)
     }
     fetchUsers()
   },[])
