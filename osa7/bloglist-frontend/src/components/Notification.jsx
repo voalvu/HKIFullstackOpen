@@ -1,5 +1,5 @@
-import { useSelector } from 'react-redux';
-import styled, { css } from 'styled-components';
+import { useSelector } from 'react-redux'
+import styled, { css } from 'styled-components'
 
 const NotificationContainer = styled.div`
   border: solid 1px ${({ color }) => color || 'black'};
@@ -12,17 +12,17 @@ const NotificationContainer = styled.div`
   background-color:rgb(255, 255, 255); /* Light background for better contrast */
   color: ${({ color }) => color || 'black'};
   font-family:arial;
-`;
+`
 
 const Notification = () => {
-  const notification = useSelector(state => state.notification);
-  const isVisible = notification.message.length > 0;
+  const notification = useSelector(state => state.notification)
+  const isVisible = notification.message.length > 0
 
   return (
     <NotificationContainer color={notification.color} isVisible={isVisible}>
       {notification.message}
     </NotificationContainer>
-  );
-};
+  )
+}
 
-export default Notification;
+export default Notification

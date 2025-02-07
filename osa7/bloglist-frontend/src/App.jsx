@@ -36,16 +36,16 @@ const Menu = (state) => {
 
   const login = () => {
     return(<>
-        {console.log("LOGINTOGGAALBE",loginTogglable.current)}
+      {console.log('LOGINTOGGAALBE',loginTogglable.current)}
 
-    
+
 
       <Togglable buttonLabel="login" ref={loginTogglable}>
         <h2>login</h2>
         <Form onSubmit={(event) => {
-          event.preventDefault();
+          event.preventDefault()
           dispatch(handleLogin(username,password))
-          console.log("FINALLY LOGGED ",window.localStorage.getItem('loggedBlogappUser'))
+          console.log('FINALLY LOGGED ',window.localStorage.getItem('loggedBlogappUser'))
         }
         }
         >
@@ -68,24 +68,24 @@ const Menu = (state) => {
     <Navbar>
 
 
-        {!state.user.token ? (
-          login()
-        ) : (
-          <>
+      {!state.user.token ? (
+        login()
+      ) : (
+        <>
           <UserInfoPanel>
             <UserInfo color={state.user.color}>
               <div className="block"></div>
               {state.user.username} logged in
-            
+
             </UserInfo>
             {logout()}
-            </UserInfoPanel>
-          </>
-        )}
-              <NavLinks>
+          </UserInfoPanel>
+        </>
+      )}
+      <NavLinks>
         <StyledLink to="/" exact activeClassName="active">Home</StyledLink>
         <StyledLink to="/users" activeClassName="active">View Users</StyledLink>
-      </NavLinks> 
+      </NavLinks>
     </Navbar>
   )
 }
@@ -101,13 +101,13 @@ const Navbar = styled.div`
   padding: 0em 1em; /* Add padding for better spacing */
   background: white;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
-`;
+`
 
 const NavLinks = styled.div`
   display: flex;
   gap: 0.5em;
   align-items: center; /* Space between links */
-`;
+`
 
 const StyledLink = styled(NavLink)`
   font-family: 'Arial', sans-serif;
@@ -123,7 +123,7 @@ const StyledLink = styled(NavLink)`
   &.active {
     background:rgba(210, 209, 202, 0.46); /* Light background on hover */
   }
-`;
+`
 const UserInfo = styled.div`
   display: flex; /* Use flexbox to align items */
   align-items: center; /* Center items vertically */
@@ -141,7 +141,7 @@ const UserInfo = styled.div`
 
   font-family: 'Arial', sans-serif;
   color: ${({ color }) => color || 'black'}; /* Dynamic color based on user */
-`;
+`
 
 
 const Page = styled.div`

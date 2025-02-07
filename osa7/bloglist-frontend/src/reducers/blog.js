@@ -39,8 +39,8 @@ export const addNewBlog = (blog) => {
 
 export const likeBlog = (blog) => {
   return async dispatch => {
-    await blogService.update(blog.id,{ ...blog,likes:blog.likes+1 }).then((response)=>{console.log('LIKED',response)})
-    
+    await blogService.update(blog.id,{ ...blog,likes:blog.likes+1 }).then((response) => {console.log('LIKED',response)})
+
     dispatch(setBlogs(await blogService.getAll()))
   }
 }

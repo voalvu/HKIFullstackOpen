@@ -13,7 +13,7 @@ const userSlice = createSlice({
   initialState,
   reducers:{
     changeUser(state, action) {
-        window.localStorage.setItem('loggedBlogappUser',JSON.stringify(action.payload))
+      window.localStorage.setItem('loggedBlogappUser',JSON.stringify(action.payload))
       state.username = action.payload.username
       state.token = action.payload.token
       if(action.payload.color)
@@ -51,9 +51,9 @@ export const handleLogin = (username, password) => {
   return async dispatch => {try{
     console.log('Loggign in',username)
     const loginRes = await loginService.login(username, password)
-    console.log("LOGGED IN RES",loginRes)
+    console.log('LOGGED IN RES',loginRes)
     blogService.setToken(loginRes.token)
-    
+
 
     dispatch(changeUser({ username: loginRes.username,
       token: loginRes.token, password:'' }))
