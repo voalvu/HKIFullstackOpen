@@ -1,7 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit'
 import loginService from '../services/login'
 import blogService from '../services/blogs'
-import { changeNotification, setNotification } from './notification'
+import { setNotification } from './notification'
+
 const emptyUser = ''
 const emptyPassword = ''
 const initialToken = null
@@ -12,6 +13,7 @@ const userSlice = createSlice({
   initialState,
   reducers:{
     changeUser(state, action) {
+        window.localStorage.setItem('loggedBlogappUser',JSON.stringify(action.payload))
       state.username = action.payload.username
       state.token = action.payload.token
       if(action.payload.color)
@@ -34,17 +36,8 @@ const userSlice = createSlice({
   }
 })
 
-export const { changeUser, clearUser, changeLoginForm,loginUser } = userSlice.actions
-export const setUsername = (username) => {
-  return async dispatch => {
-    dispatch(changeLoginForm({ username:username }))
-  }
-}
-export const setPassword = (password) => {
-  return async dispatch => {
-    dispatch(changeLoginForm({ password:password }))
-  }
-}
+export const { changeUser, clearUser,loginUser } = userSlice.actions
+
 export const setUser = (username,token,color) => {
   console.log('SETTING USER',username,token,color)
   return async dispatch => {
@@ -52,13 +45,16 @@ export const setUser = (username,token,color) => {
     dispatch(changeUser({ username:username,token:token,color:color }))
   }
 }
+
 export const handleLogin = (username, password) => {
+
   return async dispatch => {try{
     console.log('Loggign in',username)
     const loginRes = await loginService.login(username, password)
-    console.log(loginRes)
+    console.log("LOGGED IN RES",loginRes)
     blogService.setToken(loginRes.token)
-    window.localStorage.setItem('loggedBlogappUser',JSON.stringify(loginRes))
+    
+
     dispatch(changeUser({ username: loginRes.username,
       token: loginRes.token, password:'' }))
     dispatch(setNotification(['Logged in as'+loginRes.username,'green'],5))
