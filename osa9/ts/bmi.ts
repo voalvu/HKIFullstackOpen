@@ -3,7 +3,7 @@ type Result = string;
 
 const calculateBmi = (height: number, weight: number): Result => {
     if(isNaN(height) || isNaN(weight))
-        return "only number inputs allowed"
+        return "only number inputs allowed";
     const BMI = weight / (height / 100) ** 2;
 
     if (BMI < 16.0) {
@@ -25,13 +25,13 @@ const calculateBmi = (height: number, weight: number): Result => {
     }
 };
 
-if(process.argv[2] && process.argv[3])
-    console.log(calculateBmi(Number(process.argv[2]),Number(process.argv[3])))
+/* if(process.argv[2] && process.argv[3])
+    console.log(calculateBmi(Number(process.argv[2]),Number(process.argv[3])));
 else if(process.argv[2]){
-    console.log("provide height and weight")
+    console.log("provide height and weight");
 }
-else{    console.log('calculating 180cm,74kg')
+else{    console.log('calculating 180cm,74kg');
     console.log(calculateBmi(180, 74));
 }
-
-export default calculateBmi
+ */
+export default calculateBmi;

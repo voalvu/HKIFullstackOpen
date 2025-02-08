@@ -1,6 +1,6 @@
 import express from 'express';
 import calculateBmi from './bmi'; // Ensure this path is correct
-
+import calculateExercises from './exerciseCalculator';
 /* declare global {
   namespace Express {
       interface Request {
@@ -38,9 +38,9 @@ app.get('/bmi', (req, res) => {
         weight: weight,
         height: height,
         bmi: bmi
-      })
+      });
       //res.send(`Your BMI is ${bmi}`);
-      return
+      return;
     
   } else {
     res.status(400).send({
@@ -55,19 +55,53 @@ app.post('/bmi', (req, res) => {
     console.log(req.body);
     
     // Ensure height and weight are present
+     
     const { height, weight } = req.query;
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+    const { heightFromBody, weightFromBody } = req.body;
     if(Number(height) && Number(weight)) {
       const bmi = calculateBmi(Number(height), Number(weight));
       res.send(`Your BMI is ${bmi}`);
-      return
+      return;
     }
-    else if (req.body.height && req.body.weight) {
-        const bmi = calculateBmi(req.body.height, req.body.weight);
+    
+    else if (heightFromBody && weightFromBody) {
+        const bmi = calculateBmi(Number(heightFromBody), Number(weightFromBody));
         res.send(`Your BMI is ${bmi}`);
         
     } else {
         res.status(400).send('Height and weight are required');
     }
+});
+
+import { Request, Response } from 'express';
+
+interface ExerciseData {
+  daily_exercises: number[];
+  target: number;
+}
+
+app.post('/exercises', (req: Request, res: Response) => {
+  const { daily_exercises, target } = req.body as ExerciseData;
+
+  // Check if all required parameters are present
+  if (!daily_exercises || !target) {
+    res.status(400).send({ error: "parameters missing" });
+    return;
+  }
+
+  // Validate types
+  if (typeof target !== 'number' || !Array.isArray(daily_exercises) || 
+      !daily_exercises.every(day => typeof day === 'number')) {
+    res.status(400).send({
+      error: "malformatted parameters",
+      info: "daily_exercises must be an array of numbers and target must be a number"
+    });
+    return;
+  }
+
+  // If validation passes, calculate and send the result
+  res.send(calculateExercises(daily_exercises, target));
 });
 
 const PORT = 3003;

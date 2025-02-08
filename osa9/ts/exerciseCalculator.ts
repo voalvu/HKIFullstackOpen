@@ -12,10 +12,10 @@ interface ExerciseResult {
 
 
 const calculateExercises = (dailyHours: number[], target: number): ExerciseResult | string => {
-    let check = false
-    dailyHours.forEach(dh => isNaN(dh) ? check=true : null)
+    let check = false;
+    dailyHours.forEach(dh => isNaN(dh) ? check=true : null);
     if(isNaN(target) || check){
-        return "give target and all day hours as numbers"
+        return "give target and all day hours as numbers";
     }
 
     const periodLength = dailyHours.length;
@@ -53,15 +53,16 @@ const calculateExercises = (dailyHours: number[], target: number): ExerciseResul
 };
 
 
-if(process.argv[2] && process.argv[3])
-    console.log(calculateExercises(Array.from(process.argv.slice(3).map(n => Number(n))),Number(process.argv[2])))
+/* if(process.argv[2] && process.argv[3])
+    console.log(calculateExercises(Array.from(process.argv.slice(3).map(n => Number(n))),Number(process.argv[2])));
 else if(process.argv[2]){
-    console.log("provide target and training hours")
+    console.log("provide target and training hours");
 }
-else{    console.log('calculating target:2 days: [3, 0, 2, 4.5, 0, 3, 1]')
+else{    console.log('calculating target:2 days: [3, 0, 2, 4.5, 0, 3, 1]');
     // Example usage
 const exerciseData =[3, 0, 2, 4.5, 0, 3, 1]; // Example data for a week
 const targetHours = 2; // Target hours per day
 console.log(calculateExercises(exerciseData, targetHours));
-}
+} */
 
+export default calculateExercises;

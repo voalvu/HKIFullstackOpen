@@ -1,6 +1,6 @@
 const multiplicator = (a: number, b:number, printText:string) => {
     console.log(printText,  a * b);
-  }
+  };
   
   multiplicator(2, 4, 'Multiplied numbers 2 and 4, the result is:');
 
@@ -21,10 +21,10 @@ const calculator = (a: number, b: number, op: Operation): Result => {
     if (b === 0) return 'can\'t divide by 0!';
     return a / b;
   }
-}
+};
 
-const res = calculator(10,20,'multiply')
-console.log(res)
+const res = calculator(10,20,'multiply');
+console.log(res);
 
 const calculator_switch = (a: number, b: number, op: Operation) : number => {
     switch(op) {
@@ -38,14 +38,14 @@ const calculator_switch = (a: number, b: number, op: Operation) : number => {
       default:
         throw new Error('Operation is not multiply, add or divide!');
     }
-  }
+  };
 
-  console.log(calculator_switch(5,5,"add"))
+  console.log(calculator_switch(5,5,"add"));
 
   try {
     console.log(calculator(1, 5 , 'divide'));
   } catch (error: unknown) {
-    let errorMessage = 'Something went wrong: '
+    let errorMessage = 'Something went wrong: ';
     if (error instanceof Error) {
       errorMessage += error.message;
     }
