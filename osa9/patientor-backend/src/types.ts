@@ -2,7 +2,7 @@ export type Weather = 'sunny' | 'rainy' | 'cloudy' | 'windy' | 'stormy';
 
 export type Visibility = 'great' | 'good' | 'ok' | 'poor';
 
-export type Gender = 'male' | 'female' | 'other';
+export enum Gender{ Male= 'male', Female= 'female', Other= 'other'};
 
 export type DiagnoseEntry = {
     code: string,
@@ -21,6 +21,7 @@ export type PatientEntry = {
 
 export type NonSensitivePatientEntry = Omit<PatientEntry, 'ssn'>;
 
+export type NewPatientEntry = Omit<PatientEntry, 'id'>;
 /* export interface DiagnoseEntry {
     id: number;
     date: string;
