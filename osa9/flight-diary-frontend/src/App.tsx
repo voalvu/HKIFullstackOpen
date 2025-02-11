@@ -100,6 +100,77 @@ function App() {
         return <></>;
     }
   };
+  const EnumRadio = ({ option, radioType }: { option: string, radioType: string }) => {
+    return (
+      <>
+        <label>{option}</label>
+        <input
+          type='radio'
+          value={option}
+          checked={newDiary[radioType as keyof NewDiary] === option}
+          onChange={(event) => setNewDiary({ ...newDiary, [radioType]: event.target.value })}
+        />&emsp;
+      </>
+    );
+  };
+
+  const DiaryPart = ({ kind }: { kind: string }) => {
+    switch (kind) {
+      case "date":
+        return <DateInput />;
+      case "weather":
+        return <WeatherInput />;
+      case "visibility":
+        return <VisibilityInput />;
+      case "comment":
+        return <CommentInput />;
+      default:
+        return null;
+    }
+  };
+
+  const DateInput = () => (
+    <div style={{ display: 'flex', alignItems: 'baseline' }}>
+      <label>date&emsp;</label>
+      <input
+        value={newDiary.date}
+        onChange={(event) => setNewDiary({ ...newDiary, date: event.target.value })}
+        type="date"
+      />
+      <Warning el={newDiary.date} kind="date" />
+    </div>
+  );
+
+  const WeatherInput = () => (
+    <div style={{ display: 'flex', alignItems: 'baseline' }}>
+      <label>weather&emsp;</label>
+      {Object.values(Weather).map((w, index) => (
+        <EnumRadio key={index} radioType="weather" option={w.toString()} />
+      ))}
+      <Warning el={newDiary.weather} kind="weather" />
+    </div>
+  );
+
+  const VisibilityInput = () => (
+    <div style={{ display: 'flex', alignItems: 'baseline' }}>
+      <label>visibility&emsp;</label>
+      {Object.values(Visibility).map((v, index) => (
+        <EnumRadio key={index} radioType="visibility" option={v.toString()} />
+      ))}
+      <Warning el={newDiary.visibility} kind="visibility" />
+    </div>
+  );
+
+  const CommentInput = () => (
+    <div style={{ display: 'flex', alignItems: 'baseline' }}>
+      <label>comment&emsp;</label>
+      <input
+        value={newDiary.comment}
+        onChange={(event) => setNewDiary({ ...newDiary, comment: event.target.value })}
+      />
+      <Warning el={newDiary.comment} kind="comment" />
+    </div>
+  );
 
   return (
     <div>
@@ -107,26 +178,9 @@ function App() {
       <p style={{color:notification[1]}}>{notification[0]}</p>
       <h2>add new entry:</h2>
       <form onSubmit={diaryCreation} style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-        <div style={{ display: 'flex', alignItems: 'baseline' }}>
-          <label>date</label>
-          <input value={newDiary.date} onChange={(event) => setNewDiary({ ...newDiary, date: event.target.value })} />
-          <Warning el={newDiary.date} kind={'date'}></Warning>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'baseline' }}>
-          <label>weather</label>
-          <input value={newDiary.weather} onChange={(event) => setNewDiary({ ...newDiary, weather: event.target.value as Weather })} />
-          <Warning el={newDiary.weather} kind={'weather'}></Warning>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'baseline' }}>
-          <label>visibility</label>
-          <input value={newDiary.visibility} onChange={(event) => setNewDiary({ ...newDiary, visibility: event.target.value as Visibility })} />
-          <Warning el={newDiary.visibility} kind={'visibility'}></Warning>
-        </div>
-        <div style={{ display: 'flex', alignItems: 'baseline' }}>
-          <label>comment</label>
-          <input value={newDiary.comment} onChange={(event) => setNewDiary({ ...newDiary, comment: event.target.value })} />
-          <Warning el={newDiary.comment} kind={'comment'}></Warning>
-        </div>
+        {Object.keys(newDiary).map((key) => (
+          <DiaryPart key={key} kind={key} />
+        ))}
         <button type='submit'>add</button>
       </form>
 
