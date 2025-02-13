@@ -9,16 +9,16 @@ app.use(express.json());
 
 
 app.use('/api/diagnoses', diagnosesRoute);
-app.use('/patients',patientsRoute);
+app.use('/api/patients',patientsRoute);
 
 app.get('/ping', (_req, res) => {
     res.send("pong");
 });
 
-app.get('/patients',(_req,res)=>{
+/* app.get('/patients',(_req,res)=>{
     res.send("temp");
 });
-
+ */
 
 const PORT = 3003;
 

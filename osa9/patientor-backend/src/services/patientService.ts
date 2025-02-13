@@ -1,19 +1,19 @@
-import patientData from '../data/patients';
-import { PatientEntry, NonSensitivePatientEntry, Gender } from '../types';
+import patientData from '../data/patients-full';
+import { Patient, NonSensitivePatient, Gender } from '../types';
 import { v1 as uuid } from 'uuid';
-import {toNewPatientEntry} from '../utils';
+import {toNewPatient} from '../utils';
 
 
-const patients: PatientEntry[] = patientData.map(patient => ({
+const patients: Patient[] = patientData.map(patient => ({
   ...patient,
   gender: patient.gender as Gender // Ensure gender is cast to Gender type
 }));
 
-const getEntries = (): PatientEntry[] => {
+const getEntries = (): Patient[] => {
   return patients;
 };
 
-const getNonSensitiveEntries = (): NonSensitivePatientEntry[] => {
+const getNonSensitiveEntries = (): NonSensitivePatient[] => {
   return patients.map(({ id, name, dateOfBirth, gender, occupation }) => (
     {
       id,
@@ -35,12 +35,12 @@ const getNonSensitiveEntries = (): NonSensitivePatientEntry[] => {
 
 
 
-/* const toNewPatientEntry = (object: unknown): NewPatientEntry => {
+/* const toNewPatient = (object: unknown): NewPatient => {
   if (!object || typeof object !== 'object') {
     throw new Error('Incorrect or missing data');
   }
   if ('name' in object && 'dateOfBirth' in object && 'gender' in object && 'occupation' in object && 'ssn' in object) {
-    const newEntry: NewPatientEntry = {
+    const newEntry: NewPatient = {
       name: parseName(object.name),
       dateOfBirth: parseDate(object.dateOfBirth),
       gender: parseGender(object.gender),
@@ -53,10 +53,11 @@ const getNonSensitiveEntries = (): NonSensitivePatientEntry[] => {
   throw new Error('Incorrect data: some fields are missing');
 }; */
 
-const addPatient = (data: object): PatientEntry => {
-  const newEntry = toNewPatientEntry(data);
+const addPatient = (data: object): Patient => {
+  const newEntry = toNewPatient(data);
   const newPatient = {
     id: uuid(),
+    entries: [],
     ...newEntry
   };
   patients.push(newPatient);
@@ -64,9 +65,14 @@ const addPatient = (data: object): PatientEntry => {
   return newPatient;
 };
 
+const getById = (id:string): Patient | undefined =>{
+  const entries = getEntries();
+  const found = entries.find(p=>id===p.id);
+  
+  return found;
+};
 
-
-const getNonSensitiveById = (id:string): NonSensitivePatientEntry | undefined =>{
+const getNonSensitiveById = (id:string): NonSensitivePatient | undefined =>{
   const entries = getNonSensitiveEntries();
   const found = entries.find(p=>id===p.id);
   
@@ -78,4 +84,5 @@ export default {
   addPatient,
   getNonSensitiveEntries,
   getNonSensitiveById,
+  getById,
 };

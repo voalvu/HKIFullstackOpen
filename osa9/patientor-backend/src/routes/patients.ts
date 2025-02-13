@@ -22,6 +22,10 @@ router.post('/', (req, res) => {
     res.send(nonSensitive);
 });
 
+router.get('/:id',(req,res)=>{
+  res.send(patientService.getById(req.params.id))
+});
+
 router.use(errorMiddleware);
 
 export default router;
