@@ -1,6 +1,6 @@
-import { InputLabel, Select, MenuItem, TextField, Popper, List, ListItem, Paper, SelectChangeEvent } from "@mui/material"
-import { useRef, useEffect } from 'react';
-import { DiagnoseEntry, EntryTypeEnum, TypeOption } from "../../../../shared/types/types";
+import { InputLabel, Select, MenuItem, TextField, SelectChangeEvent } from "@mui/material";
+import { useEffect } from 'react';
+import { EntryTypeEnum, TypeOption } from "../../../../shared/types/types";
 
 interface Props{
     type:EntryTypeEnum;
@@ -12,8 +12,6 @@ interface Props{
 }
 
 const BaseEntryFields = ({type,setType,specialist,setSpecialist,description,setDescription}: Props ) => {
-
-    const popperAnchorRef = useRef(null);
 
     useEffect(()=>{
         const savedType = localStorage.getItem('entryType');
@@ -39,14 +37,6 @@ const BaseEntryFields = ({type,setType,specialist,setSpecialist,description,setD
   const typeOptions: TypeOption[] = Object.values(EntryTypeEnum).map(v => ({
     value: v.toString()
   }));
-
-  const parseDiagnosisCodes = (object: unknown): Array<DiagnoseEntry['code']> =>  {
-    if (!object || typeof object !== 'object' || !('diagnosisCodes' in object)) {
-      return [] as Array<DiagnoseEntry['code']>;
-    }
-  
-    return object.diagnosisCodes as Array<DiagnoseEntry['code']>;
-  };
   
 
 return (<div id="base-entry-fields">
@@ -83,17 +73,17 @@ return (<div id="base-entry-fields">
         label="Diagnose codes"
         placeholder="code"
         fullWidth
-        value={diagnosticCodes}
+        value={diagnosisCodes}
         onFocus={({target})=> console.log(target.value)}
         onChange={({ target }) =>
-        setDiagnosticCodes(
+        setdiagnosisCodes(
             parseDiagnosisCodes({diagnosisCodes: target.value.split(',')}))          }
         ref={popperAnchorRef}
     /> */}
-{/*     <Popper open={diagnosticCodes.length > 0} anchorEl={popperAnchorRef.current}>
+{/*     <Popper open={diagnosisCodes.length > 0} anchorEl={popperAnchorRef.current}>
     <Paper>
     <List>
-      {diagnosticCodes.map((code) => (
+      {diagnosisCodes.map((code) => (
         <ListItem button key={code} onClick={(e) => {console.log(e)}}>
           {code}
         </ListItem>

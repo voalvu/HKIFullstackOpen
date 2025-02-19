@@ -24,5 +24,5 @@ export const HospitalEntryFields = ({discharge,setDischarge}:Props)=>{
         onChange={({ target }) => setDischarge({...discharge, criteria: target.value})}
       />
     </div>
-  )};
+  );};
 export default HospitalEntryFields;

@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import {diagnoseEntrySchema, newEntrySchema, newVisitEntrySchema} from './utils';
+import {diagnoseEntrySchema, newEntrySchema, newVisitEntrySchema} from '../utils';
 export type Weather = 'sunny' | 'rainy' | 'cloudy' | 'windy' | 'stormy';
 
 export type Visibility = 'great' | 'good' | 'ok' | 'poor';
@@ -13,6 +13,9 @@ export type NonSensitivePatient = Omit<Patient, 'ssn' | 'entries'>;
 export type NewPatient = z.infer<typeof newEntrySchema>; 
 
 export type NewEntry = z.infer<typeof newVisitEntrySchema>;
+
+// front end
+export type PatientFormValues = Omit<Patient, "id" | "entries">;
 
 export interface Patient extends NewPatient {
   id: string;

@@ -22,16 +22,21 @@ router.post('/', (req: Request, res:Response) => {
     res.send(nonSensitive);
 });
 
-router.post('/:id/entries', (req: Request,res: Response) =>{
-  // addding entry to patient record
-  const updatedPatientWithNewEntry = patientService.addEntry(req.body as object,req.params.id);
-  if(updatedPatientWithNewEntry){
-    res.send(updatedPatientWithNewEntry);
-/*   const nonSensitive = patientService.getNonSensitiveById(updatedPatientWithNewEntry.id);
-    res.send(nonSensitive); */
-  
-}else{res.send("couldn't add entries");};
+router.post('/:id/entries', (req: Request, res: Response) => {
+  try {
+    // Adding entry to patient record
+    const updatedPatientWithNewEntry = patientService.addEntry(req.body as object, req.params.id);
+    res.status(200).send(updatedPatientWithNewEntry);
+  } catch (error) {
+    console.error("Error adding entry:", error);
+    if (error instanceof Error) {
+      res.status(400).json( {message: error} ); // Return a JSON response with the error message
+    } else {
+      res.status(400).json({ message: 'Unknown error' }); // Handle unknown error type
+    }
+  }
 });
+
 
 router.get('/:id',(req,res)=>{
   res.send(patientService.getById(req.params.id));

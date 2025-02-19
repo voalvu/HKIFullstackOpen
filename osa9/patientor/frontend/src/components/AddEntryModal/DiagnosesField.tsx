@@ -2,14 +2,14 @@ import { TextField, Chip, FormControl, Autocomplete } from "@mui/material";
 import { DiagnoseEntry } from "../../../../shared/types/types";
 
 interface Props {
-    diagnosticCodes: Array<DiagnoseEntry['code']>;
-    setDiagnosticCodes: React.Dispatch<React.SetStateAction<Array<DiagnoseEntry['code']>>>;
+    diagnosisCodes: Array<DiagnoseEntry['code']>;
+    setdiagnosisCodes: React.Dispatch<React.SetStateAction<Array<DiagnoseEntry['code']>>>;
     diagnoses?: DiagnoseEntry[];
 }
 
-const DiagnoseCodesInput = ({ diagnosticCodes, setDiagnosticCodes, diagnoses }: Props) => {
+const DiagnoseCodesInput = ({ diagnosisCodes, setdiagnosisCodes, diagnoses }: Props) => {
     const handleAutocompleteChange = (event: React.SyntheticEvent, newValue: string[]) => {
-        setDiagnosticCodes(newValue);
+        setdiagnosisCodes(newValue);
     };
 
     // Sort and stringify diagnoses into options
@@ -23,7 +23,7 @@ const DiagnoseCodesInput = ({ diagnosticCodes, setDiagnosticCodes, diagnoses }: 
                 multiple
                 fullWidth
                 options={diagnosticOptions}
-                value={diagnosticCodes}
+                value={diagnosisCodes}
                 onChange={handleAutocompleteChange}
                 freeSolo
                 disablePortal={false}
@@ -75,12 +75,12 @@ const DiagnoseCodesInput = ({ diagnosticCodes, setDiagnosticCodes, diagnoses }: 
     );
 };
 
-const DiagnoseCodesField = ({ diagnosticCodes, setDiagnosticCodes, diagnoses }: Props) => {
+const DiagnoseCodesField = ({ diagnosisCodes, setdiagnosisCodes, diagnoses }: Props) => {
     return (
         <div id="diagnose-codes-input" style={{ position: 'relative' }}> {/* Ensure relative positioning for context */}
             <DiagnoseCodesInput
-                diagnosticCodes={diagnosticCodes}
-                setDiagnosticCodes={setDiagnosticCodes}
+                diagnosisCodes={diagnosisCodes}
+                setdiagnosisCodes={setdiagnosisCodes}
                 diagnoses={diagnoses}
             />
         </div>

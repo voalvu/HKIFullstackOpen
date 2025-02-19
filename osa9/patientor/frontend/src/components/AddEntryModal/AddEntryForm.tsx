@@ -29,7 +29,7 @@ const AddEntryForm = ({ onCancel, onSubmit, diagnoses }: Props) => {
   const [type, setType] = useState<EntryTypeEnum>(EntryTypeEnum.HealthCheck);
   const [specialist, setSpecialist] = useState('');
   const [description, setDescription] = useState('');
-  const [diagnosticCodes, setDiagnosticCodes] = useState<Array<DiagnoseEntry['code']>>([]);
+  const [diagnosisCodes, setdiagnosisCodes] = useState<Array<DiagnoseEntry['code']>>([]);
   const [rating, setRating] = useState<HealthCheckRating>(HealthCheckRating.Healthy);
   const [employerName, setEmployerName] = useState('');
   const [sickLeave, setSickLeave] = useState<SickLeave>({ startDate: '', endDate: '' });
@@ -40,7 +40,7 @@ const AddEntryForm = ({ onCancel, onSubmit, diagnoses }: Props) => {
     const baseEntry = {
       specialist,
       description,
-      diagnosticCodes
+      diagnosisCodes
     };  
     console.log("submitting current type:",type);
 
@@ -100,8 +100,8 @@ const AddEntryForm = ({ onCancel, onSubmit, diagnoses }: Props) => {
           />
         )}
 
-        <DiagnoseCodesField diagnosticCodes={diagnosticCodes}
-          setDiagnosticCodes={setDiagnosticCodes} diagnoses={diagnoses}>
+        <DiagnoseCodesField diagnosisCodes={diagnosisCodes}
+          setdiagnosisCodes={setdiagnosisCodes} diagnoses={diagnoses}>
             
         </DiagnoseCodesField>
         

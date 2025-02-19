@@ -1,15 +1,16 @@
 import { z } from 'zod';
-import { NewPatient, Gender, NewEntry, HealthCheckRating } from './types';
+import { NewPatient, Gender, NewEntry, HealthCheckRating, DiagnoseEntry } from './types/types';
 
 const nonEmptyString = z.string().min(1, "field cannot be empty");
 
 // Base schema for common properties
+
 const baseEntrySchema = z.object({
   id: z.string(),
   description: nonEmptyString,
   date: nonEmptyString,
   specialist: nonEmptyString,
-  diagnosticCodes: z.array(z.string()).optional(), // Assuming diagnosisCodes are strings
+  diagnosisCodes: z.array(z.string()).optional(), // Assuming diagnosisCodes are Diagnosis['code']
 });
 
 // Function to create specific entry schemas
@@ -58,13 +59,35 @@ export const diagnoseEntrySchema = z.object({
 
 // Utility functions
 export const toNewPatient = (object: unknown): NewPatient => {
-  const parsedEntry = newEntrySchema.parse(object);
+  if (typeof object !== 'object' || object === null) {
+    throw new Error('Invalid input: not an object');
+  }
+  const parsedEntry = newEntrySchema.parse({
+    ...object,
+  });
   return parsedEntry;
 };
 
+const parseDiagnosisCodes = (object: unknown): Array<DiagnoseEntry['code']> =>  {
+  if (!object || typeof object !== 'object' || !('diagnosisCodes' in object)) {
+    // we will just trust the data to be in correct form
+    return [] as Array<DiagnoseEntry['code']>;
+  }
+  if(object.diagnosisCodes instanceof Array)
+    object.diagnosisCodes.map((d:string)=>{return d.split(':')[0]})
+  else
+    throw new Error('Something went wrogn with diagnoseCode');
+  return object.diagnosisCodes as Array<DiagnoseEntry['code']>;
+};
+
 export const toNewVisitEntry = (object: unknown): NewEntry => {
-  console.log(object);
-  const parsedEntry = newVisitEntrySchema.parse(object);
+  if (typeof object !== 'object' || object === null) {
+    throw new Error('Invalid input: not an object');
+  }
+  const parsedEntry = newVisitEntrySchema.parse({
+    ...object,
+    diagnosisCodes: parseDiagnosisCodes(object)
+  });
   return parsedEntry;
 };
 

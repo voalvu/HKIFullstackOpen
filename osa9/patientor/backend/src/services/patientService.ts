@@ -1,7 +1,7 @@
 import patientData from '../data/patients-full';
-import { Entry, Patient, NonSensitivePatient, Gender } from '../types';
+import { Entry, Patient, NonSensitivePatient, Gender } from '../../../shared/types/types';
 import { v1 as uuid } from 'uuid';
-import {toNewPatient, toNewVisitEntry} from '../utils';
+import {toNewPatient, toNewVisitEntry} from '../../../shared/utils';
 
 const patients: Patient[] = patientData.map(patient => ({
   ...patient,
@@ -24,34 +24,6 @@ const getNonSensitiveEntries = (): NonSensitivePatient[] => {
   ));
 };
 
-/* const isDate = (date: string): boolean => {
-  return Boolean(Date.parse(date));
-}; */
-
-/* const isString = (s: unknown): s is string => {
-  return typeof s === 'string' || s instanceof String;
-}; */
-
-
-
-/* const toNewPatient = (object: unknown): NewPatient => {
-  if (!object || typeof object !== 'object') {
-    throw new Error('Incorrect or missing data');
-  }
-  if ('name' in object && 'dateOfBirth' in object && 'gender' in object && 'occupation' in object && 'ssn' in object) {
-    const newEntry: NewPatient = {
-      name: parseName(object.name),
-      dateOfBirth: parseDate(object.dateOfBirth),
-      gender: parseGender(object.gender),
-      occupation: parseOccupation(object.occupation),
-      ssn: parseSsn(object.ssn)
-    };
-    
-    return newEntry;
-  }
-  throw new Error('Incorrect data: some fields are missing');
-}; */
-
 const addPatient = (data: object): Patient => {
   const newEntry = toNewPatient(data);
   const newPatient = {
@@ -60,9 +32,10 @@ const addPatient = (data: object): Patient => {
     ...newEntry
   };
   patients.push(newPatient);
-  //console.log(patients);
   return newPatient;
 };
+
+// helper function to get YYYY-MM-DD format
 const getCurrentDate = (): string => {
   const today = new Date();
   const yyyy = today.getFullYear();
@@ -70,32 +43,35 @@ const getCurrentDate = (): string => {
   const dd = String(today.getDate()).padStart(2, '0');
   return `${yyyy}-${mm}-${dd}`;
 };
-const addEntry = (data: object, id:string): Patient | undefined => {
-  console.log('at addEntry, handling:',data,"for id:",id)
-  const newEntry = toNewVisitEntry({...data, id:uuid(), date: getCurrentDate()});
-  console.log('parsed to newEntry',newEntry)
-  const patient = getById(id);
-  if(patient){
-    let newEntries: Entry[];
-    if(patient.entries !== undefined){
-      newEntries = patient.entries;
-    }else{
-      newEntries = [];
-    }
-    newEntries.push(newEntry);
-    const updatedPatient = {...patient, entries:newEntries};
-    const found = patients.find(p=>p.id===updatedPatient.id);
-    let idx;
-    if(found){idx=patients.indexOf(found);
-       patients[idx] = updatedPatient;
-    }
-    
-    //patients.map((p)=>{p.id === id ? updatedPatient : p});
-    //console.log(patients);
-    return updatedPatient;
-  }else{return;};
+const addEntry = (data: object, id: string): Patient => {
+  console.log('at addEntry, handling:', data, "for id:", id);
 
+  const patient = getById(id);
+  if (!patient) {
+    throw new Error("No patient with the given ID.");
+  }
+
+  const newEntry = toNewVisitEntry({ ...data, id: uuid(), date: getCurrentDate() });
+  console.log('parsed to newEntry', newEntry);
+
+  // Check if newEntry is an instance of Error
+  if (newEntry instanceof Error) {
+    console.error('Error parsing new entry:', newEntry.message);
+    throw newEntry; // Throw the error instead of returning it
+  }
+
+  const newEntries: Entry[] = patient.entries ? patient.entries : [];
+  newEntries.push(newEntry);
+  const updatedPatient = { ...patient, entries: newEntries };
+  const found = patients.find(p => p.id === updatedPatient.id);
+  if (found) {
+    const idx = patients.indexOf(found);
+    patients[idx] = updatedPatient;
+  }
+  return updatedPatient;
 };
+
+
 
 const getById = (id:string): Patient | undefined =>{
   const entries = getEntries();

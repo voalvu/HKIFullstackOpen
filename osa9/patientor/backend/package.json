@@ -6,7 +6,8 @@
   "scripts": {
     "start": "node build/index.js",
     "dev": "ts-node-dev src/index.ts",
-    "lint": "eslint .",
+    "lint": "eslint . --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
+
     "tsc": "tsc"
   },
   "keywords": [],

@@ -16,7 +16,7 @@ const AddEntryModal = ({ modalOpen, onClose, onSubmit, errors, diagnoses }: Prop
     <DialogTitle>Add a new entry</DialogTitle>
     <Divider />
     <DialogContent><>
-      {errors && <>{errors.map((e,idx)=>{return(<div key={idx}><Alert severity="error">{e}</Alert></div>)})}</>}
+      {errors && <>{errors.map((e,idx)=>{return(<div key={idx}><Alert severity="error">{e}</Alert></div>);})}</>}
       <AddEntryForm onSubmit={onSubmit} onCancel={onClose} diagnoses={diagnoses}/>
       </>
     </DialogContent>
