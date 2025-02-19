@@ -1,8 +1,7 @@
 import patientData from '../data/patients-full';
-import { Patient, NonSensitivePatient, Gender } from '../types';
+import { Entry, Patient, NonSensitivePatient, Gender } from '../types';
 import { v1 as uuid } from 'uuid';
-import {toNewPatient} from '../utils';
-
+import {toNewPatient, toNewVisitEntry} from '../utils';
 
 const patients: Patient[] = patientData.map(patient => ({
   ...patient,
@@ -64,6 +63,39 @@ const addPatient = (data: object): Patient => {
   //console.log(patients);
   return newPatient;
 };
+const getCurrentDate = (): string => {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, '0');
+  const dd = String(today.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+};
+const addEntry = (data: object, id:string): Patient | undefined => {
+  console.log('at addEntry, handling:',data,"for id:",id)
+  const newEntry = toNewVisitEntry({...data, id:uuid(), date: getCurrentDate()});
+  console.log('parsed to newEntry',newEntry)
+  const patient = getById(id);
+  if(patient){
+    let newEntries: Entry[];
+    if(patient.entries !== undefined){
+      newEntries = patient.entries;
+    }else{
+      newEntries = [];
+    }
+    newEntries.push(newEntry);
+    const updatedPatient = {...patient, entries:newEntries};
+    const found = patients.find(p=>p.id===updatedPatient.id);
+    let idx;
+    if(found){idx=patients.indexOf(found);
+       patients[idx] = updatedPatient;
+    }
+    
+    //patients.map((p)=>{p.id === id ? updatedPatient : p});
+    //console.log(patients);
+    return updatedPatient;
+  }else{return;};
+
+};
 
 const getById = (id:string): Patient | undefined =>{
   const entries = getEntries();
@@ -82,6 +114,7 @@ const getNonSensitiveById = (id:string): NonSensitivePatient | undefined =>{
 export default {
   getEntries,
   addPatient,
+  addEntry,
   getNonSensitiveEntries,
   getNonSensitiveById,
   getById,

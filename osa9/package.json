@@ -1,0 +1,14 @@
+{
+  "name": "osa9",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {    "test": "playwright test --project=chromium --project=firefox"},
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.50.1",
+    "@types/node": "^22.13.4"
+  }
+}

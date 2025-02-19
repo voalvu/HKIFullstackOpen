@@ -12,18 +12,29 @@ const errorMiddleware = (error: unknown, _req: Request, res: Response, next: Nex
     }
   };
 
-router.get('/', (_req, res) => {
+router.get('/', (_req:Request, res:Response) => {
   res.send(patientService.getNonSensitiveEntries());
 });
 
-router.post('/', (req, res) => {
-    const newPatient = patientService.addPatient(req.body);
+router.post('/', (req: Request, res:Response) => {
+    const newPatient = patientService.addPatient(req.body as object);
     const nonSensitive = patientService.getNonSensitiveById(newPatient.id);
     res.send(nonSensitive);
 });
 
+router.post('/:id/entries', (req: Request,res: Response) =>{
+  // addding entry to patient record
+  const updatedPatientWithNewEntry = patientService.addEntry(req.body as object,req.params.id);
+  if(updatedPatientWithNewEntry){
+    res.send(updatedPatientWithNewEntry);
+/*   const nonSensitive = patientService.getNonSensitiveById(updatedPatientWithNewEntry.id);
+    res.send(nonSensitive); */
+  
+}else{res.send("couldn't add entries");};
+});
+
 router.get('/:id',(req,res)=>{
-  res.send(patientService.getById(req.params.id))
+  res.send(patientService.getById(req.params.id));
 });
 
 router.use(errorMiddleware);
